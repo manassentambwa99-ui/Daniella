@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Daniella — Univers littéraire</title>
-<meta name="description" content="Daniella — Univers littéraire : découvrez les livres de Daniella, lisez leurs résumés, puis ouvrez ou téléchargez les PDF.">
+<meta name="description" content="Daniella — Univers littéraire : l'application où Daniella publie ses livres. Lisez les résumés, aimez vos livres préférés et lisez les PDF directement.">
 <meta name="theme-color" content="#0a0414">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231b0d3a'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23efc25f' font-family='Georgia,serif' font-weight='700'%3ED%3C/text%3E%3C/svg%3E">
 <script>document.documentElement.classList.add("js");</script>
 
-<!-- Polices (facultatif) : si vous préférez un site 100 % hors ligne, supprimez ces 3 lignes.
-     Le site utilisera alors des polices de secours élégantes (Georgia / police système). -->
+<!-- Polices (facultatif) : supprimez ces 3 lignes pour un site sans appel externe,
+     des polices de secours élégantes (Georgia / police système) seront alors utilisées. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap">
 
 <style>
 /* =========================================================
-   1. VARIABLES — palette violet profond & or lumineux
+   1. VARIABLES — violet profond & or lumineux
    ========================================================= */
 :root{
   --bg-0:#0a0414; --bg-1:#12082a; --bg-2:#1b0d3a;
@@ -55,7 +55,7 @@ h1,h2,h3{ margin:0; font-weight:600; }
 p{ margin:0; }
 ul{ margin:0; padding:0; list-style:none; }
 [hidden]{ display:none !important; }
-:where(a,button,input,[tabindex]):focus-visible{ outline:3px solid var(--gold-300); outline-offset:3px; }
+:where(a,button,input,textarea,select,[tabindex]):focus-visible{ outline:3px solid var(--gold-300); outline-offset:3px; }
 .sr-only{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 .conteneur{ width:min(1180px, 100% - 2 * clamp(1rem,4vw,2rem)); margin-inline:auto; }
 .ico{ display:inline-flex; width:1.2em; height:1.2em; flex:none; }
@@ -64,7 +64,7 @@ ul{ margin:0; padding:0; list-style:none; }
 .evitement:focus{ top:1rem; }
 
 /* =========================================================
-   3. ARRIÈRE-PLAN ATMOSPHÉRIQUE (léger : transform / opacity uniquement)
+   3. ARRIÈRE-PLAN ATMOSPHÉRIQUE (transform / opacity uniquement)
    ========================================================= */
 .fond{ position:fixed; inset:0; z-index:-3; background:
   radial-gradient(1100px 700px at 10% -8%, rgba(116,64,222,.46), transparent 60%),
@@ -129,16 +129,32 @@ ul{ margin:0; padding:0; list-style:none; }
   color:var(--text); background:rgba(255,255,255,.075); border-color:rgba(255,255,255,.24);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
 }
+.btn--danger{ color:#ffd3c9; border-color:rgba(255,150,130,.5); }
 @media (hover:hover){
   .btn--or:hover{ transform:translateY(-2px); filter:saturate(1.08); box-shadow:0 16px 36px -8px rgba(239,194,95,.7), 0 0 0 1px rgba(255,236,170,.6) inset, 0 1px 0 rgba(255,255,255,.7) inset; }
   .btn--or:hover::after{ transform:translateX(130%); }
   .btn--verre:hover{ transform:translateY(-2px); background:rgba(255,255,255,.13); border-color:rgba(239,194,95,.7); color:var(--gold-200); }
+  .btn--danger:hover{ border-color:rgba(255,150,130,.9); color:#fff; }
 }
 .btn:active{ transform:translateY(0) scale(.98); }
 .btn[disabled], .btn[aria-disabled="true"]{ opacity:.45; cursor:not-allowed; box-shadow:none; filter:grayscale(.35); transform:none; pointer-events:none; }
 
+/* Boutons ronds (j'aime / préféré) */
+.btn-icone{
+  width:46px; height:46px; flex:none; display:inline-grid; place-items:center; border-radius:50%;
+  border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.07); color:var(--text-2); cursor:pointer;
+  transition:transform .25s var(--ease), border-color .25s, color .25s, background-color .25s, box-shadow .25s;
+}
+.btn-icone .ico{ width:1.3rem; height:1.3rem; }
+@media (hover:hover){ .btn-icone:hover{ border-color:rgba(239,194,95,.75); color:var(--gold-200); transform:translateY(-2px); } }
+.btn-icone:active{ transform:scale(.94); }
+[aria-pressed="true"].btn-icone{ color:var(--gold-300); border-color:rgba(239,194,95,.75); background:rgba(239,194,95,.14); box-shadow:0 0 20px -4px rgba(239,194,95,.6); }
+[aria-pressed="true"] .ico svg{ fill:currentColor; }
+.btn-bascule[aria-pressed="true"]{ color:var(--gold-200); border-color:rgba(239,194,95,.75); background:rgba(239,194,95,.14); }
+.pop{ animation:pop .45s var(--ease); }
+
 /* =========================================================
-   6. EN-TÊTE ET MENU
+   6. EN-TÊTE ET ONGLETS (barre du haut / barre du bas sur mobile)
    ========================================================= */
 .entete{ position:sticky; top:0; z-index:60; height:var(--header-h); display:flex; align-items:center; }
 .entete::before{
@@ -160,56 +176,68 @@ ul{ margin:0; padding:0; list-style:none; }
 .marque__texte{ display:flex; flex-direction:column; line-height:1.1; }
 .marque__nom{ font:700 1.55rem/1 var(--font-title); letter-spacing:.01em; }
 .marque__sous{ margin-top:.2rem; font-size:.68rem; letter-spacing:.24em; text-transform:uppercase; color:var(--gold-300); font-weight:600; }
-.nav ul{ display:flex; gap:.25rem; }
-.nav a{ display:inline-flex; align-items:center; min-height:44px; padding:.5rem 1.05rem; border-radius:999px; color:var(--text-2); text-decoration:none; font-weight:500; transition:background-color .25s, color .25s, box-shadow .25s; }
-.nav a:hover{ color:#fff; background:rgba(255,255,255,.08); }
-.nav a[aria-current="true"]{ color:var(--gold-200); background:rgba(239,194,95,.12); box-shadow:inset 0 0 0 1px rgba(239,194,95,.38); }
-.burger{ display:none; width:48px; height:48px; border-radius:50%; border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.08); color:var(--text); cursor:pointer; place-items:center; transition:background-color .25s, border-color .25s; }
-.burger:hover{ border-color:rgba(239,194,95,.6); }
-.burger__barres{ position:relative; display:block; width:20px; height:14px; }
-.burger__barres i{ position:absolute; left:0; width:100%; height:2px; border-radius:2px; background:currentColor; transition:transform .3s var(--ease), opacity .2s, top .3s var(--ease); }
-.burger__barres i:nth-child(1){ top:0; } .burger__barres i:nth-child(2){ top:6px; } .burger__barres i:nth-child(3){ top:12px; }
-.burger[aria-expanded="true"] i:nth-child(1){ top:6px; transform:rotate(45deg); }
-.burger[aria-expanded="true"] i:nth-child(2){ opacity:0; }
-.burger[aria-expanded="true"] i:nth-child(3){ top:6px; transform:rotate(-45deg); }
-@media (max-width:860px){
-  .burger{ display:grid; }
-  .nav{
-    position:absolute; top:calc(100% + .5rem); left:.75rem; right:.75rem; padding:.6rem; border-radius:var(--radius);
-    background:linear-gradient(145deg,rgba(42,21,88,.95),rgba(18,8,40,.97));
-    border:1px solid rgba(239,194,95,.3); box-shadow:var(--shadow), 0 0 60px -20px rgba(239,194,95,.3);
-    -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px);
-    opacity:0; visibility:hidden; transform:translateY(-8px) scale(.98); transform-origin:top right;
-    transition:opacity .25s var(--ease), transform .25s var(--ease), visibility 0s linear .25s;
-  }
-  .nav.ouvert{ opacity:1; visibility:visible; transform:none; transition-delay:0s; }
-  .nav ul{ flex-direction:column; gap:.25rem; }
-  .nav a{ display:flex; min-height:52px; padding:.8rem 1.1rem; font-size:1.1rem; border-radius:14px; }
+
+.onglets{ display:flex; gap:.3rem; padding:.35rem; border-radius:999px; background:rgba(8,3,20,.55); border:1px solid rgba(255,255,255,.14); }
+.tab{
+  position:relative; display:inline-flex; align-items:center; gap:.5rem; min-height:44px; padding:.45rem 1rem;
+  border:0; border-radius:999px; background:transparent; color:var(--text-2);
+  font:500 .95rem var(--font-body); cursor:pointer;
+  transition:background-color .25s, color .25s, box-shadow .25s, transform .25s var(--ease);
 }
+.tab .ico{ width:1.15rem; height:1.15rem; }
+@media (hover:hover){ .tab:hover{ color:#fff; background:rgba(255,255,255,.08); } }
+.tab[aria-selected="true"]{ background:linear-gradient(135deg,#fbe9a8,#e5b44f); color:#2a1604; font-weight:600; box-shadow:0 6px 18px -6px rgba(239,194,95,.6); }
+.tab__n{
+  min-width:1.35rem; height:1.35rem; padding:0 .35rem; display:inline-grid; place-items:center; border-radius:999px;
+  background:var(--gold-400); color:#2a1604; font-size:.72rem; font-weight:700; font-variant-numeric:tabular-nums;
+}
+.tab[aria-selected="true"] .tab__n{ background:#2a1604; color:var(--gold-300); }
+
+@media (max-width:960px){
+  body{ padding-bottom:calc(96px + env(safe-area-inset-bottom)); }
+  .onglets-nav{ position:fixed; left:0; right:0; bottom:0; z-index:70; padding:0 .6rem calc(.6rem + env(safe-area-inset-bottom)); }
+  .onglets{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:.15rem; padding:.35rem; border-radius:24px;
+    background:rgba(20,9,44,.88); border:1px solid rgba(239,194,95,.32);
+    box-shadow:0 -10px 40px -10px rgba(0,0,0,.7), 0 0 40px -16px rgba(239,194,95,.3);
+    -webkit-backdrop-filter:blur(18px) saturate(150%); backdrop-filter:blur(18px) saturate(150%);
+  }
+  .tab{ flex-direction:column; justify-content:center; gap:.1rem; min-height:58px; padding:.4rem .1rem; border-radius:18px; font-size:.7rem; line-height:1.1; }
+  .tab .ico{ width:1.45rem; height:1.45rem; }
+  .tab[aria-selected="true"]{ background:rgba(239,194,95,.16); color:var(--gold-200); box-shadow:inset 0 0 0 1px rgba(239,194,95,.45), 0 0 22px -8px rgba(239,194,95,.6); }
+  .tab__n{ position:absolute; top:.1rem; right:calc(50% - 1.6rem); min-width:1.15rem; height:1.15rem; font-size:.64rem; }
+  .tab[aria-selected="true"] .tab__n{ background:var(--gold-400); color:#2a1604; }
+}
+@media (max-width:380px){ .tab{ font-size:.62rem; } .tab .ico{ width:1.3rem; height:1.3rem; } }
 
 /* =========================================================
-   7. TITRES COMMUNS
+   7. TITRES, PAGES ET SECTIONS
    ========================================================= */
+.page{ padding:clamp(1.5rem,4vw,3rem) 0 clamp(2rem,5vw,4rem); animation:fondu .45s ease backwards; }
+.page:focus{ outline:none; }
 .surtitre{ display:inline-flex; align-items:center; gap:.7rem; font-size:.8rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--gold-300); }
 .surtitre::before{ content:""; width:2.2rem; height:1px; background:linear-gradient(90deg,transparent,var(--gold-400)); }
 h1,h2,.fiche__titre,.carte__titre,.lecteur__titre{ font-family:var(--font-title); }
 h2{ margin:.5rem 0 .8rem; font-size:clamp(2.1rem,5.2vw,3.3rem); line-height:1.08; letter-spacing:-.005em; text-wrap:balance; }
-.chapeau{ max-width:38rem; font-size:clamp(1.05rem,2.3vw,1.25rem); line-height:1.7; color:var(--text-2); }
+h2:focus{ outline:none; }
+.chapeau{ max-width:40rem; font-size:clamp(1.05rem,2.3vw,1.22rem); line-height:1.7; color:var(--text-2); }
+.entete-page{ max-width:46rem; margin-bottom:1.75rem; }
 .or{ color:var(--gold-300); }
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .or{ background:linear-gradient(100deg,#fff2c4 0%,#f1c75f 40%,#d9a63a 70%,#fbe7a6 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
 }
-
-/* =========================================================
-   8. ACCUEIL
-   ========================================================= */
-.accueil{ padding:clamp(2.5rem,7vw,6rem) 0 clamp(2.5rem,6vw,5rem); }
-.accueil__grille{ display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(2rem,5vw,4rem); align-items:center; }
-@media (max-width:900px){ .accueil__grille{ grid-template-columns:1fr; } }
-h1{ margin:.8rem 0 1.3rem; font-size:clamp(2.7rem,7.4vw,5.2rem); line-height:1.02; letter-spacing:-.012em; text-wrap:balance; }
 .actions{ display:flex; flex-wrap:wrap; gap:.8rem; }
-.accueil .actions{ margin-top:2rem; }
-.pastilles{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2rem; }
+
+/* ---------- Accueil ---------- */
+.accueil__grille{ display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(2rem,5vw,4rem); align-items:center; padding-top:clamp(.5rem,3vw,2.5rem); }
+@media (max-width:900px){ .accueil__grille{ grid-template-columns:1fr; } }
+h1{ margin:.8rem 0 1.1rem; font-size:clamp(2.6rem,7.2vw,5rem); line-height:1.02; letter-spacing:-.012em; text-wrap:balance; }
+.message-accueil{ position:relative; margin:0 0 1.8rem; padding:1.4rem 1.5rem 1.2rem 1.7rem; max-width:37rem; }
+.message-accueil::after{ content:"\201C"; position:absolute; top:-.1rem; right:1.1rem; font:700 4.5rem/1 var(--font-title); color:rgba(239,194,95,.3); pointer-events:none; }
+.message-accueil__salut{ font-size:.78rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-300); }
+.message-accueil__texte{ margin-top:.55rem; font:italic 500 clamp(1.2rem,2.6vw,1.45rem)/1.5 var(--font-title); color:var(--text); white-space:pre-line; }
+.message-accueil__signe{ margin-top:.7rem; color:var(--gold-300); font-size:.95rem; }
+.pastilles{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.8rem; }
 .pastille{ padding:.4rem .95rem; border-radius:999px; font-size:.92rem; color:var(--text-2); border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.05); }
 .pastille strong{ color:var(--gold-300); font-weight:600; }
 
@@ -231,18 +259,11 @@ h1{ margin:.8rem 0 1.3rem; font-size:clamp(2.7rem,7.4vw,5.2rem); line-height:1.0
 .embleme__rond .ico{ width:42%; height:42%; }
 .embleme__rond .ico svg{ stroke-width:1.2; }
 .embleme__legende{ font:italic 500 1.35rem/1.3 var(--font-title); color:var(--text-2); max-width:18rem; }
+.bloc{ margin-top:clamp(2.5rem,6vw,4.5rem); }
+.bloc__entete{ display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
+.bloc__entete h2{ margin:.4rem 0 0; font-size:clamp(1.8rem,4vw,2.5rem); }
 
-/* =========================================================
-   9. SECTIONS ET ANIMATION D'APPARITION
-   ========================================================= */
-.section{ padding:clamp(2.5rem,6vw,5.5rem) 0; }
-.entete-section{ max-width:44rem; margin-bottom:2rem; }
-.js .reveal{ opacity:0; transform:translateY(24px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
-.js .reveal.visible{ opacity:1; transform:none; }
-
-/* =========================================================
-   10. BIBLIOTHÈQUE : RECHERCHE, FILTRES, CARTES
-   ========================================================= */
+/* ---------- Recherche et filtres ---------- */
 .outils{ display:grid; gap:1rem; padding:clamp(.9rem,2.5vw,1.25rem); margin-bottom:1.75rem; }
 .recherche{ position:relative; }
 .recherche input{
@@ -269,24 +290,24 @@ h1{ margin:.8rem 0 1.3rem; font-size:clamp(2.7rem,7.4vw,5.2rem); line-height:1.0
 .puce__n{ margin-left:.4rem; opacity:.7; font-variant-numeric:tabular-nums; }
 .compte{ color:var(--muted); font-size:.95rem; }
 
+/* ---------- Cartes de livres ---------- */
 .grille{ display:grid; gap:clamp(1rem,2.5vw,1.75rem); grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr)); }
 .carte{
   display:flex; flex-direction:column; gap:1.1rem; padding:clamp(.9rem,2vw,1.15rem); cursor:pointer;
-  animation:monte .6s var(--ease) backwards; animation-delay:calc(var(--i,0) * 70ms);
   transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
 }
-.carte[hidden]{ display:none !important; }
+.grille[data-anime="1"] .carte{ animation:monte .6s var(--ease) backwards; animation-delay:calc(var(--i,0) * 70ms); }
 @media (hover:hover){
   .carte:hover{ transform:translateY(-6px); border-color:rgba(239,194,95,.5); box-shadow:0 26px 60px -16px rgba(0,0,0,.85), 0 0 0 1px rgba(239,194,95,.3), 0 0 44px -10px rgba(239,194,95,.28); }
   .carte:hover .couv img{ transform:scale(1.04); }
   .carte:hover .couv::after{ transform:translateX(7%); opacity:1; }
 }
-.carte:active{ transform:scale(.99); }
 .carte__corps{ display:flex; flex-direction:column; gap:.7rem; flex:1; align-items:flex-start; }
 .carte__titre{ font-size:clamp(1.5rem,2.4vw,1.75rem); line-height:1.14; letter-spacing:-.003em; text-wrap:balance; display:-webkit-box; -webkit-line-clamp:3; line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
 .carte__resume{ color:var(--text-2); font-size:.98rem; line-height:1.65; display:-webkit-box; -webkit-line-clamp:4; line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
 .carte__resume.vide, .fiche__resume.vide{ font-style:italic; color:var(--muted); }
-.carte__bouton{ width:100%; }
+.carte__pied{ display:flex; align-items:center; gap:.5rem; }
+.carte__bouton{ flex:1; padding-inline:1rem; }
 .badge{ display:inline-block; padding:.28rem .75rem; border-radius:999px; font-size:.76rem; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--gold-200); background:rgba(239,194,95,.12); border:1px solid rgba(239,194,95,.42); }
 @media (max-width:560px){
   .grille{ grid-template-columns:1fr; }
@@ -296,7 +317,8 @@ h1{ margin:.8rem 0 1.3rem; font-size:clamp(2.7rem,7.4vw,5.2rem); line-height:1.0
   .carte__resume{ -webkit-line-clamp:5; line-clamp:5; }
 }
 
-/* ----- Couvertures ----- */
+/* ---------- Couvertures ---------- */
+.couv-btn{ display:block; width:100%; padding:0; border:0; background:none; cursor:pointer; border-radius:8px; }
 .couv{
   position:relative; isolation:isolate; overflow:hidden; aspect-ratio:2/3; width:100%;
   border-radius:6px 12px 12px 6px; background:linear-gradient(160deg,#2a1560,#150a30);
@@ -309,8 +331,17 @@ h1{ margin:.8rem 0 1.3rem; font-size:clamp(2.7rem,7.4vw,5.2rem); line-height:1.0
 .couv__vide{ position:absolute; inset:8px; display:grid; place-content:center; justify-items:center; gap:.5rem; padding:.8rem; text-align:center; border:1.5px dashed rgba(239,194,95,.55); border-radius:8px; color:var(--text-2); font-size:.85rem; line-height:1.35; }
 .couv__vide .ico{ width:2rem; height:2rem; color:var(--gold-300); }
 .couv__vide strong{ color:var(--text); font-weight:600; }
-.couv__vide small{ font-size:.72rem; color:var(--muted); word-break:break-all; }
-@media (max-width:560px){ .couv__vide{ font-size:.72rem; padding:.4rem; } .couv__vide small{ display:none; } .couv__vide .ico{ width:1.5rem; height:1.5rem; } }
+.couv__lire{
+  position:absolute; left:50%; bottom:.6rem; z-index:3; transform:translateX(-50%); display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap;
+  padding:.4rem .9rem; border-radius:999px; font-size:.8rem; font-weight:600; color:#2a1604; pointer-events:none;
+  background:linear-gradient(135deg,#fbe9a8,#e5b44f); box-shadow:0 6px 16px -4px rgba(0,0,0,.6);
+  transition:transform .3s var(--ease);
+}
+@media (hover:hover){ .couv-btn:hover .couv__lire{ transform:translateX(-50%) translateY(-3px) scale(1.05); } }
+@media (max-width:560px){
+  .couv__vide{ font-size:.72rem; padding:.4rem; } .couv__vide .ico{ width:1.5rem; height:1.5rem; }
+  .couv__lire{ font-size:.7rem; padding:.3rem .65rem; bottom:.4rem; } .couv__lire .ico{ display:none; }
+}
 
 .vide{ display:grid; justify-items:center; gap:.8rem; text-align:center; padding:clamp(2rem,6vw,3.5rem) 1.5rem; }
 .vide .ico{ width:2.6rem; height:2.6rem; color:var(--gold-300); }
@@ -318,7 +349,66 @@ h1{ margin:.8rem 0 1.3rem; font-size:clamp(2.7rem,7.4vw,5.2rem); line-height:1.0
 .vide p{ max-width:34rem; color:var(--text-2); }
 
 /* =========================================================
-   11. DIALOGUES : FICHE ET LECTEUR
+   8. ESPACE AUTEURE
+   ========================================================= */
+.verrou-carte{ max-width:540px; margin:clamp(.5rem,3vw,2rem) auto; padding:clamp(1.5rem,5vw,2.6rem); display:grid; gap:1rem; justify-items:center; text-align:center; }
+.verrou-carte__rond{ width:84px; height:84px; display:grid; place-items:center; border-radius:50%; color:var(--gold-300);
+  background:radial-gradient(circle at 30% 25%,rgba(251,233,168,.22),rgba(116,64,222,.3) 58%,rgba(20,9,44,.6));
+  border:1px solid rgba(239,194,95,.55); box-shadow:0 0 50px -8px rgba(239,194,95,.45); }
+.verrou-carte__rond .ico{ width:2.2rem; height:2.2rem; }
+.verrou-carte h2{ margin:0; font-size:clamp(1.8rem,5vw,2.4rem); }
+.verrou-carte form{ width:100%; display:grid; gap:.9rem; text-align:left; }
+.secoue{ animation:secoue .4s ease; }
+.auteure__grille{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:1.5rem; align-items:start; }
+@media (max-width:900px){ .auteure__grille{ grid-template-columns:1fr; } }
+.carte-form{ padding:clamp(1.2rem,3vw,2rem); }
+.carte-form h3{ font:600 clamp(1.5rem,3vw,1.9rem)/1.15 var(--font-title); margin-bottom:.4rem; }
+.carte-form > p{ color:var(--text-2); margin-bottom:1.2rem; font-size:.98rem; }
+.formulaire{ display:grid; gap:1.1rem; }
+.deux{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+@media (max-width:560px){ .deux{ grid-template-columns:1fr; } }
+.champ label:not(.depot), .champ .libelle{ display:block; margin-bottom:.4rem; font-weight:600; font-size:.98rem; }
+.champ .req{ color:var(--gold-300); }
+.champ input[type="text"], .champ input[type="search"], .champ input[type="number"], .champ textarea{
+  width:100%; padding:.85rem 1.1rem; border-radius:16px; border:1px solid rgba(255,255,255,.22);
+  background:rgba(8,3,20,.5); color:var(--text); font:400 1rem var(--font-body);
+  transition:border-color .25s, box-shadow .25s, background-color .25s;
+}
+.champ textarea{ min-height:150px; resize:vertical; line-height:1.6; }
+.champ input::placeholder, .champ textarea::placeholder{ color:var(--muted); opacity:1; }
+.champ input:focus, .champ textarea:focus{ outline:none; border-color:var(--gold-400); box-shadow:0 0 0 4px rgba(239,194,95,.22); background:rgba(8,3,20,.7); }
+.champ__aide{ margin-top:.35rem; font-size:.85rem; color:var(--muted); }
+.depot{
+  position:relative; display:grid; grid-template-columns:auto 1fr; align-items:center; gap:1rem; padding:1rem; border-radius:var(--radius);
+  border:1.5px dashed rgba(239,194,95,.5); background:rgba(255,255,255,.04); cursor:pointer;
+  transition:border-color .25s, background-color .25s;
+}
+.depot:hover, .depot:focus-within{ border-color:var(--gold-300); background:rgba(239,194,95,.08); }
+.depot:focus-within{ outline:3px solid var(--gold-300); outline-offset:3px; }
+.depot input{ position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+.depot__apercu{ width:56px; height:84px; display:grid; place-items:center; overflow:hidden; border-radius:6px 10px 10px 6px; background:rgba(255,255,255,.07); color:var(--gold-300); border:1px solid rgba(255,255,255,.14); }
+.depot__apercu--pdf{ height:56px; border-radius:12px; }
+.depot__apercu img{ width:100%; height:100%; object-fit:cover; }
+.depot__apercu .ico{ width:1.6rem; height:1.6rem; }
+.depot__texte strong{ display:block; font-weight:600; }
+.depot__texte span{ font-size:.88rem; color:var(--muted); word-break:break-word; }
+.statut{ display:flex; gap:.6rem; align-items:flex-start; padding:.7rem .95rem; border-radius:var(--radius-sm); font-size:.93rem; line-height:1.45; color:var(--text-2); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); }
+.statut small{ display:block; margin-top:.15rem; color:var(--muted); font-size:.8rem; word-break:break-all; }
+.statut .ico{ margin-top:.1rem; }
+.statut--ok{ border-color:rgba(239,194,95,.4); } .statut--ok .ico{ color:var(--gold-300); }
+.statut--alerte{ border-color:rgba(255,160,140,.5); background:rgba(255,120,100,.08); } .statut--alerte .ico{ color:#ffb4a4; }
+.pubs{ display:grid; gap:1rem; }
+.pub{ display:grid; grid-template-columns:64px minmax(0,1fr); gap:.9rem 1rem; align-items:center; padding:.9rem; }
+.pub__couv .couv__vide{ inset:4px; padding:.2rem; }
+.pub__couv .couv__vide strong{ display:none; }
+.pub__couv .couv__vide .ico{ width:1.3rem; height:1.3rem; }
+.pub__info h4{ margin:0; font:600 1.35rem/1.15 var(--font-title); overflow-wrap:anywhere; }
+.pub__info p{ margin-top:.2rem; color:var(--muted); font-size:.88rem; }
+.pub__actions{ grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:.5rem; }
+@media (min-width:760px){ .pub{ grid-template-columns:64px minmax(0,1fr) auto; } .pub__actions{ grid-column:auto; justify-content:flex-end; } }
+
+/* =========================================================
+   9. DIALOGUES : FICHE, LECTEUR, PARTAGE, CONFIRMATION
    ========================================================= */
 dialog{ padding:0; border:0; background:transparent; color:var(--text); max-width:none; max-height:none; overflow:visible; }
 dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); animation:fondu .3s ease backwards; }
@@ -331,7 +421,7 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
 
 .fiche{ width:min(980px,calc(100vw - 2rem)); margin:auto; }
 .fiche__cadre{ border-radius:var(--radius-lg); background:linear-gradient(150deg,rgba(52,26,108,.9),rgba(20,9,44,.96)); box-shadow:0 40px 100px -20px rgba(0,0,0,.9), 0 0 80px -30px rgba(239,194,95,.3); }
-.fiche[open] .fiche__cadre{ animation:ouvre .45s var(--ease) backwards; }
+.fiche[open] .fiche__cadre, .lecteur[open] .lecteur__cadre, .petit[open] .petit__cadre{ animation:ouvre .45s var(--ease) backwards; }
 .fiche__defile{ max-height:calc(100vh - 2rem); max-height:calc(100dvh - 2rem); overflow:auto; overscroll-behavior:contain; padding:clamp(1.5rem,4vw,2.75rem); border-radius:var(--radius-lg); }
 .fiche__grille{ display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:clamp(1.5rem,3.5vw,2.75rem); align-items:start; }
 .fiche__couv{ position:sticky; top:0; }
@@ -340,13 +430,8 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
 .fiche__meta{ color:var(--gold-300); font-size:.98rem; letter-spacing:.03em; }
 .filet{ width:100%; height:1px; margin:1.3rem 0; background:linear-gradient(90deg,var(--gold-400),rgba(239,194,95,0)); }
 .fiche__resume{ max-width:62ch; font-size:1.075rem; line-height:1.85; color:var(--text); white-space:pre-line; hyphens:auto; }
-.statut{ display:flex; gap:.6rem; align-items:flex-start; margin-top:1.3rem; padding:.7rem .95rem; border-radius:var(--radius-sm); font-size:.93rem; line-height:1.45; color:var(--text-2); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); }
-.statut small{ display:block; margin-top:.15rem; color:var(--muted); font-size:.8rem; word-break:break-all; }
-.statut .ico{ margin-top:.1rem; }
-.statut--ok{ border-color:rgba(239,194,95,.4); } .statut--ok .ico{ color:var(--gold-300); }
-.statut--alerte{ border-color:rgba(255,160,140,.5); background:rgba(255,120,100,.08); } .statut--alerte .ico{ color:#ffb4a4; }
+.fiche .statut{ margin-top:1.3rem; }
 .fiche .actions{ margin-top:1.4rem; }
-.lien-discret{ display:inline-flex; align-items:center; gap:.45rem; min-height:44px; margin-top:.4rem; color:var(--gold-300); font-size:.95rem; text-underline-offset:4px; }
 @media (max-width:720px){
   .fiche__grille{ grid-template-columns:1fr; }
   .fiche__couv{ position:static; max-width:200px; margin-inline:auto; }
@@ -357,14 +442,14 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
   .fiche{ width:100vw; margin:auto 0 0; }
   .fiche__cadre, .fiche__defile{ border-radius:24px 24px 0 0; }
   .fiche__defile{ max-height:92vh; max-height:92dvh; padding-bottom:calc(1.5rem + env(safe-area-inset-bottom)); }
-  .fiche .actions{ width:100%; flex-direction:column; } .fiche .actions .btn{ width:100%; }
+  .fiche .actions{ width:100%; } .fiche .actions .btn{ flex:1 1 100%; }
 }
 
 .lecteur{ width:min(1100px,calc(100vw - 1rem)); height:min(92vh,900px); height:min(92dvh,900px); margin:auto; }
 .lecteur__cadre{ display:flex; flex-direction:column; height:100%; overflow:hidden; border-radius:var(--radius-lg); background:linear-gradient(150deg,rgba(46,23,96,.94),rgba(16,7,36,.97)); box-shadow:0 40px 100px -20px rgba(0,0,0,.9); }
-.lecteur[open] .lecteur__cadre{ animation:ouvre .45s var(--ease) backwards; }
 .lecteur__barre{ display:flex; flex-wrap:wrap; align-items:center; gap:.7rem 1rem; padding:.8rem 1rem .8rem 1.4rem; border-bottom:1px solid rgba(255,255,255,.12); }
 .lecteur__titre{ flex:1 1 200px; min-width:0; font-size:1.4rem; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lecteur__page{ color:var(--gold-300); font-size:.9rem; font-variant-numeric:tabular-nums; }
 .lecteur__outils{ display:flex; flex-wrap:wrap; gap:.5rem; }
 .lecteur__corps{ position:relative; flex:1; min-height:0; background:rgba(8,3,20,.6); }
 .lecteur__chargement{ position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:.8rem; color:var(--text-2); }
@@ -376,6 +461,9 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
 .lecteur__secours h3{ font:600 1.8rem/1.15 var(--font-title); }
 .lecteur__secours p{ max-width:32rem; color:var(--text-2); }
 .lecteur__aide{ padding:.6rem 1.4rem .75rem; font-size:.86rem; color:var(--muted); border-top:1px solid rgba(255,255,255,.1); }
+.pdf-pages{ position:absolute; inset:0; overflow:auto; overscroll-behavior:contain; padding:.75rem .75rem .25rem; -webkit-overflow-scrolling:touch; }
+.pdf-page{ position:relative; width:100%; max-width:900px; margin:0 auto .75rem; background:#fff; border-radius:4px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.5); }
+.pdf-page canvas{ position:absolute; inset:0; display:block; width:100%; height:100%; }
 @media (max-width:640px){
   .lecteur{ width:100vw; height:100vh; height:100dvh; }
   .lecteur__cadre{ border-radius:0; }
@@ -385,51 +473,36 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
   .lecteur__aide{ padding-bottom:calc(.75rem + env(safe-area-inset-bottom)); }
 }
 
-/* =========================================================
-   12. À PROPOS (avec onglets)
-   ========================================================= */
-.apropos{ display:grid; grid-template-columns:minmax(0,300px) 1fr; gap:clamp(1.75rem,4vw,3.5rem); align-items:center; padding:clamp(1.5rem,4vw,3rem); }
-.apropos__portrait{ position:relative; margin:14px; }
-.apropos__portrait::before{ content:""; position:absolute; inset:-14px; border-radius:50%; border:1px dashed rgba(239,194,95,.38); animation:tourne 70s linear infinite; pointer-events:none; }
-.portrait{ position:relative; width:100%; aspect-ratio:1; display:grid; place-items:center; overflow:hidden; border-radius:50%;
-  background:radial-gradient(circle at 30% 25%,rgba(251,233,168,.22),rgba(116,64,222,.3) 55%,rgba(20,9,44,.65));
-  border:1px solid rgba(239,194,95,.5); box-shadow:0 0 60px -10px rgba(239,194,95,.35), inset 0 0 40px rgba(255,255,255,.06); }
-.portrait img{ width:100%; height:100%; object-fit:cover; }
-.portrait__lettre{ font:600 clamp(5.5rem,14vw,8.5rem)/1 var(--font-title); color:var(--gold-300); }
-@supports ((-webkit-background-clip:text) or (background-clip:text)){
-  .portrait__lettre{ background:linear-gradient(160deg,#fff2c4,#e5b44f 60%,#b8841f); -webkit-background-clip:text; background-clip:text; color:transparent; }
-}
-.onglets{ display:flex; flex-wrap:wrap; gap:.4rem; width:fit-content; max-width:100%; margin:1.2rem 0; padding:.35rem; border-radius:999px; background:rgba(8,3,20,.5); border:1px solid rgba(255,255,255,.12); }
-.onglet{ min-height:44px; padding:.5rem 1.15rem; border:0; border-radius:999px; background:transparent; color:var(--text-2); font:500 .98rem var(--font-body); cursor:pointer; transition:background-color .25s, color .25s, box-shadow .25s; }
-@media (hover:hover){ .onglet:hover{ color:#fff; background:rgba(255,255,255,.08); } }
-.onglet[aria-selected="true"]{ background:linear-gradient(135deg,#fbe9a8,#e5b44f); color:#2a1604; font-weight:600; box-shadow:0 6px 18px -6px rgba(239,194,95,.6); }
-.panneau{ max-width:60ch; border-radius:var(--radius-sm); animation:fondu .4s ease backwards; }
-.panneau p{ margin-bottom:1rem; color:var(--text-2); }
-.panneau p:last-child{ margin-bottom:0; }
-.panneau ul{ display:grid; gap:.8rem; }
-.panneau li{ position:relative; padding-left:1.6rem; color:var(--text-2); }
-.panneau li::before{ content:""; position:absolute; left:.2rem; top:.7em; width:.5rem; height:.5rem; border-radius:50%; background:var(--gold-400); box-shadow:0 0 10px rgba(239,194,95,.7); }
-.panneau .discret{ color:var(--muted); font-style:italic; }
-@media (max-width:820px){
-  .apropos{ grid-template-columns:1fr; }
-  .apropos__portrait{ width:min(210px,60%); margin:14px auto; }
-}
+.petit{ width:min(520px,calc(100vw - 2rem)); margin:auto; }
+.petit--large{ width:min(640px,calc(100vw - 2rem)); }
+.petit__cadre{ position:relative; display:grid; gap:1rem; padding:clamp(1.3rem,4vw,2rem); border-radius:var(--radius-lg); background:linear-gradient(150deg,rgba(52,26,108,.94),rgba(20,9,44,.97)); box-shadow:0 40px 100px -20px rgba(0,0,0,.9); }
+.petit__cadre h2{ margin:0; font-size:clamp(1.6rem,4vw,2.1rem); padding-right:2.6rem; }
+.petit__cadre p{ color:var(--text-2); }
+.etapes{ display:grid; gap:.9rem; counter-reset:etape; list-style:none; margin:0; padding:0; }
+.etapes li{ position:relative; padding-left:2.4rem; color:var(--text-2); counter-increment:etape; }
+.etapes li::before{ content:counter(etape); position:absolute; left:0; top:0; width:1.8rem; height:1.8rem; display:grid; place-items:center; border-radius:50%; background:rgba(239,194,95,.16); border:1px solid rgba(239,194,95,.5); color:var(--gold-200); font-size:.85rem; font-weight:600; }
+.etapes .actions{ margin-top:.5rem; }
+.code{ width:100%; min-height:180px; padding:.8rem 1rem; border-radius:14px; border:1px solid rgba(255,255,255,.22); background:rgba(8,3,20,.6); color:var(--gold-200); font:.82rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; resize:vertical; }
 
 /* =========================================================
-   13. PIED DE PAGE
+   10. NOTIFICATION, PIED DE PAGE
    ========================================================= */
-.pied{ position:relative; margin-top:clamp(1.5rem,5vw,3rem); padding:clamp(2rem,5vw,3.5rem) 0 2rem; }
+.toast{
+  position:fixed; left:50%; bottom:calc(1.4rem + env(safe-area-inset-bottom)); z-index:90; max-width:min(92vw,460px);
+  padding:.8rem 1.3rem; border-radius:999px; text-align:center; font-size:.96rem; color:var(--text);
+  background:rgba(30,15,62,.94); border:1px solid rgba(239,194,95,.55); box-shadow:0 14px 40px -10px rgba(0,0,0,.8), 0 0 30px -8px rgba(239,194,95,.4);
+  transform:translate(-50%,24px); opacity:0; pointer-events:none; transition:opacity .3s, transform .35s var(--ease);
+}
+.toast.visible{ opacity:1; transform:translate(-50%,0); }
+@media (max-width:960px){ .toast{ bottom:calc(6.4rem + env(safe-area-inset-bottom)); } }
+.pied{ position:relative; margin-top:clamp(1rem,4vw,2.5rem); padding:clamp(2rem,5vw,3rem) 0 1.5rem; }
 .pied::before{ content:""; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(239,194,95,.6),transparent); }
-.pied__grille{ display:grid; grid-template-columns:1.4fr 1fr auto; gap:2rem; align-items:start; }
-.pied__phrase{ margin-top:1rem; max-width:26rem; color:var(--text-2); font-size:.98rem; }
-.pied__titre{ margin-bottom:.6rem; font-size:.78rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-300); }
-.pied nav a{ display:inline-flex; align-items:center; min-height:40px; color:var(--text-2); text-decoration:none; }
-.pied nav a:hover{ color:var(--gold-200); text-decoration:underline; text-underline-offset:4px; }
-.pied__bas{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:.5rem 1.5rem; margin-top:2rem; padding-top:1.25rem; border-top:1px solid rgba(255,255,255,.1); color:var(--muted); font-size:.92rem; }
-@media (max-width:760px){ .pied__grille{ grid-template-columns:1fr; } }
+.pied__haut{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.2rem; }
+.pied__phrase{ max-width:30rem; color:var(--text-2); font-size:.98rem; }
+.pied__bas{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:.5rem 1.5rem; margin-top:1.6rem; padding-top:1.1rem; border-top:1px solid rgba(255,255,255,.1); color:var(--muted); font-size:.9rem; }
 
 /* =========================================================
-   14. ANIMATIONS (discrètes) ET ACCESSIBILITÉ DU MOUVEMENT
+   11. ANIMATIONS DISCRÈTES ET ACCESSIBILITÉ DU MOUVEMENT
    ========================================================= */
 @keyframes derive{ from{ transform:translate3d(0,0,0) scale(1); } to{ transform:translate3d(4vw,6vh,0) scale(1.08); } }
 @keyframes flotte{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
@@ -438,12 +511,13 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
 @keyframes fondu{ from{ opacity:0; } to{ opacity:1; } }
 @keyframes scintille{ from{ opacity:.32; } to{ opacity:.7; } }
 @keyframes tourne{ to{ transform:rotate(360deg); } }
+@keyframes pop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.35); } 100%{ transform:scale(1); } }
+@keyframes secoue{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-6px); } 75%{ transform:translateX(6px); } }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
-  .js .reveal{ opacity:1; transform:none; }
 }
 @media (forced-colors:active){
-  .verre,.btn,.puce,.carte,.couv{ border:1px solid CanvasText; }
+  .verre,.btn,.puce,.carte,.couv,.tab,.btn-icone{ border:1px solid CanvasText; }
 }
 </style>
 </head>
@@ -456,113 +530,246 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
 <div class="halo halo--2" aria-hidden="true"></div>
 <div class="etoiles" aria-hidden="true"></div>
 
-<!-- ============================ EN-TÊTE ============================ -->
+<!-- ============================ EN-TÊTE + ONGLETS ============================ -->
 <header class="entete" id="haut">
   <div class="conteneur entete__interieur">
-    <a class="marque" href="#accueil" aria-label="Daniela — Univers littéraire : retour à l'accueil">
+    <a class="marque" href="#/accueil" aria-label="Daniella — Univers littéraire : accueil">
       <span class="marque__sigle" aria-hidden="true">D</span>
       <span class="marque__texte">
-        <span class="marque__nom">Daniela</span>
+        <span class="marque__nom">Daniella</span>
         <span class="marque__sous">Univers littéraire</span>
       </span>
     </a>
 
-    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Ouvrir le menu">
-      <span class="burger__barres" aria-hidden="true"><i></i><i></i><i></i></span>
-    </button>
-
-    <nav class="nav" id="nav" aria-label="Navigation principale">
-      <ul>
-        <li><a href="#accueil" data-section="accueil" aria-current="true">Accueil</a></li>
-        <li><a href="#bibliotheque" data-section="bibliotheque">Bibliothèque</a></li>
-        <li><a href="#apropos" data-section="apropos">À propos</a></li>
-      </ul>
+    <nav class="onglets-nav" aria-label="Sections de l'application">
+      <div class="onglets" role="tablist" aria-label="Sections">
+        <button class="tab" role="tab" type="button" id="tab-accueil" data-onglet="accueil" aria-controls="p-accueil" aria-selected="true"><span data-ico="maison"></span><span class="tab__txt">Accueil</span></button>
+        <button class="tab" role="tab" type="button" id="tab-bibliotheque" data-onglet="bibliotheque" aria-controls="p-bibliotheque" aria-selected="false" tabindex="-1"><span data-ico="livre"></span><span class="tab__txt">Bibliothèque</span></button>
+        <button class="tab" role="tab" type="button" id="tab-favoris" data-onglet="favoris" aria-controls="p-favoris" aria-selected="false" tabindex="-1"><span data-ico="etoile"></span><span class="tab__txt">Préférés</span><span class="tab__n" hidden>0</span></button>
+        <button class="tab" role="tab" type="button" id="tab-likes" data-onglet="likes" aria-controls="p-likes" aria-selected="false" tabindex="-1"><span data-ico="coeur"></span><span class="tab__txt">Likés</span><span class="tab__n" hidden>0</span></button>
+        <button class="tab" role="tab" type="button" id="tab-auteure" data-onglet="auteure" aria-controls="p-auteure" aria-selected="false" tabindex="-1"><span data-ico="cadenas"></span><span class="tab__txt">Auteure</span></button>
+      </div>
     </nav>
   </div>
 </header>
 
-<main id="contenu" tabindex="-1">
+<main id="contenu" class="conteneur">
 
-  <!-- ============================ ACCUEIL ============================ -->
-  <section class="accueil" id="accueil" aria-labelledby="titre-accueil">
-    <div class="conteneur accueil__grille">
-      <div class="accueil__texte">
+  <!-- ============================ ONGLET : ACCUEIL ============================ -->
+  <section class="page" id="p-accueil" role="tabpanel" aria-labelledby="tab-accueil" tabindex="-1">
+    <div class="accueil__grille">
+      <div>
         <p class="surtitre">Autrice · Bibliothèque en ligne</p>
-        <h1 id="titre-accueil">Entrez dans l'univers de <span class="or">Daniela</span></h1>
-        <p class="chapeau">Daniela commence à publier ses livres. Découvrez ses histoires, parcourez les résumés, puis lisez ou téléchargez les PDF directement depuis ce site.</p>
-        <div class="actions">
-          <a class="btn btn--or" href="#bibliotheque">Découvrir la bibliothèque <span data-ico="fleche"></span></a>
-          <a class="btn btn--verre" href="#apropos">À propos de Daniela</a>
+        <h1>Bienvenue dans l'univers de <span class="or">Daniella</span></h1>
+        <div class="message-accueil verre">
+          <p class="message-accueil__salut" id="salut">Bienvenue</p>
+          <p class="message-accueil__texte" id="message-texte"></p>
+          <p class="message-accueil__signe">— Daniella</p>
         </div>
-        <ul class="pastilles" id="pastilles" aria-label="La bibliothèque en chiffres"></ul>
+        <div class="actions">
+          <a class="btn btn--or" href="#/bibliotheque">Explorer la bibliothèque <span data-ico="fleche"></span></a>
+          <a class="btn btn--verre" href="#/auteure"><span data-ico="plume"></span> Espace auteure</a>
+        </div>
+        <ul class="pastilles" id="pastilles" aria-label="En un coup d'œil"></ul>
       </div>
       <div class="vitrine" id="vitrine"></div>
     </div>
-  </section>
 
-  <!-- ============================ BIBLIOTHÈQUE ============================ -->
-  <section class="section reveal" id="bibliotheque" aria-labelledby="titre-bibliotheque">
-    <div class="conteneur">
-      <div class="entete-section">
-        <p class="surtitre">Bibliothèque</p>
-        <h2 id="titre-bibliotheque">Les livres de Daniela</h2>
-        <p class="chapeau">Recherchez un titre, filtrez par genre, puis ouvrez la fiche d'un livre pour lire son résumé complet et accéder à son PDF.</p>
-      </div>
-
-      <div class="outils verre" id="outils" hidden>
-        <div class="recherche">
-          <label class="sr-only" for="recherche">Rechercher dans les titres et les résumés</label>
-          <span class="recherche__loupe" data-ico="recherche"></span>
-          <input type="search" id="recherche" placeholder="Rechercher un titre, un mot…" autocomplete="off" enterkeyhint="search" spellcheck="false">
-          <button class="recherche__effacer" id="effacer" type="button" aria-label="Effacer la recherche" hidden><span data-ico="fermer"></span></button>
+    <div class="bloc" id="bloc-recentes" hidden>
+      <div class="bloc__entete">
+        <div>
+          <p class="surtitre">Nouveautés</p>
+          <h2>Dernières publications</h2>
         </div>
-        <div class="filtres" id="filtres" role="group" aria-label="Filtrer par genre"></div>
-        <p class="compte" id="compte" role="status" aria-live="polite"></p>
+        <a class="btn btn--verre btn--petit" href="#/bibliotheque">Voir toute la bibliothèque <span data-ico="fleche"></span></a>
       </div>
-
-      <ul class="grille" id="grille" aria-label="Liste des livres"></ul>
-
-      <div class="vide verre" id="vide-recherche" hidden>
-        <span data-ico="recherche"></span>
-        <h3>Aucun livre ne correspond</h3>
-        <p>Essayez un autre mot ou choisissez un autre genre.</p>
-        <button class="btn btn--or" id="reinit" type="button">Réinitialiser la recherche</button>
-      </div>
-
-      <div class="vide verre" id="vide-biblio" hidden>
-        <span data-ico="livre"></span>
-        <h3>La bibliothèque se prépare</h3>
-        <p>Les premiers livres de Daniela seront présentés ici dès leur publication. Revenez bientôt !</p>
-      </div>
-
-      <noscript><p class="vide verre">JavaScript est nécessaire pour afficher la bibliothèque. Veuillez l'activer dans votre navigateur.</p></noscript>
+      <ul class="grille" id="grille-recentes" aria-label="Dernières publications"></ul>
     </div>
   </section>
 
-  <!-- ============================ À PROPOS ============================ -->
-  <section class="section reveal" id="apropos" aria-labelledby="titre-apropos">
-    <div class="conteneur">
-      <div class="apropos verre">
-        <div class="apropos__portrait"><div class="portrait" id="portrait"></div></div>
-        <div class="apropos__contenu">
-          <p class="surtitre">À propos</p>
-          <h2 id="titre-apropos">À propos de Daniela</h2>
+  <!-- ============================ ONGLET : BIBLIOTHÈQUE ============================ -->
+  <section class="page" id="p-bibliotheque" role="tabpanel" aria-labelledby="tab-bibliotheque" tabindex="-1" hidden>
+    <div class="entete-page">
+      <p class="surtitre">Bibliothèque</p>
+      <h2 tabindex="-1">Les livres de Daniella</h2>
+      <p class="chapeau">Touchez une couverture pour lire le PDF, ouvrez une fiche pour le résumé complet, et gardez vos coups de cœur avec ♥ et ★.</p>
+    </div>
 
-          <div class="onglets" role="tablist" aria-label="Rubriques de présentation">
-            <button class="onglet" role="tab" type="button" id="onglet-presentation" aria-selected="true" aria-controls="panneau-presentation">Présentation</button>
-            <button class="onglet" role="tab" type="button" id="onglet-lecteurs" aria-selected="false" aria-controls="panneau-lecteurs" tabindex="-1">Pour les lecteurs</button>
-            <button class="onglet" role="tab" type="button" id="onglet-contact" aria-selected="false" aria-controls="panneau-contact" tabindex="-1">Contact</button>
-          </div>
+    <div class="outils verre" id="outils" hidden>
+      <div class="recherche">
+        <label class="sr-only" for="recherche">Rechercher dans les titres et les résumés</label>
+        <span class="recherche__loupe" data-ico="recherche"></span>
+        <input type="search" id="recherche" placeholder="Rechercher un titre, un mot…" autocomplete="off" enterkeyhint="search" spellcheck="false">
+        <button class="recherche__effacer" id="effacer" type="button" aria-label="Effacer la recherche" hidden><span data-ico="fermer"></span></button>
+      </div>
+      <div class="filtres" id="filtres" role="group" aria-label="Filtrer par genre"></div>
+      <p class="compte" id="compte" role="status" aria-live="polite"></p>
+    </div>
 
-          <div class="panneau" role="tabpanel" id="panneau-presentation" aria-labelledby="onglet-presentation" tabindex="0"></div>
-          <div class="panneau" role="tabpanel" id="panneau-lecteurs" aria-labelledby="onglet-lecteurs" tabindex="0" hidden>
-            <ul>
-              <li>Parcourez la bibliothèque, recherchez un titre ou un mot du résumé et filtrez par genre.</li>
-              <li>Ouvrez la fiche d'un livre pour lire son résumé complet.</li>
-              <li>Lisez le PDF directement sur le site ou téléchargez-le pour le lire plus tard, lorsque le fichier est disponible.</li>
-            </ul>
+    <ul class="grille" id="grille-bibliotheque" aria-label="Liste des livres"></ul>
+
+    <div class="vide verre" id="vide-recherche" hidden>
+      <span data-ico="recherche"></span>
+      <h3>Aucun livre ne correspond</h3>
+      <p>Essayez un autre mot ou choisissez un autre genre.</p>
+      <button class="btn btn--or" id="reinit" type="button">Réinitialiser la recherche</button>
+    </div>
+    <div class="vide verre" id="vide-biblio" hidden>
+      <span data-ico="livre"></span>
+      <h3>La bibliothèque se prépare</h3>
+      <p>Les premiers livres de Daniella seront présentés ici dès leur publication. Revenez bientôt !</p>
+    </div>
+  </section>
+
+  <!-- ============================ ONGLET : LIVRES PRÉFÉRÉS ============================ -->
+  <section class="page" id="p-favoris" role="tabpanel" aria-labelledby="tab-favoris" tabindex="-1" hidden>
+    <div class="entete-page">
+      <p class="surtitre">Ma sélection</p>
+      <h2 tabindex="-1">Mes livres préférés</h2>
+      <p class="chapeau">Les livres que vous avez marqués avec ★. Ils sont gardés sur cet appareil.</p>
+    </div>
+    <ul class="grille" id="grille-favoris" aria-label="Livres préférés"></ul>
+    <div class="vide verre" id="vide-favoris" hidden>
+      <span data-ico="etoile"></span>
+      <h3>Aucun livre préféré pour l'instant</h3>
+      <p>Touchez ★ sur un livre pour le retrouver ici.</p>
+      <a class="btn btn--or" href="#/bibliotheque">Parcourir la bibliothèque</a>
+    </div>
+  </section>
+
+  <!-- ============================ ONGLET : LIVRES LIKÉS ============================ -->
+  <section class="page" id="p-likes" role="tabpanel" aria-labelledby="tab-likes" tabindex="-1" hidden>
+    <div class="entete-page">
+      <p class="surtitre">Mes coups de cœur</p>
+      <h2 tabindex="-1">Mes livres likés</h2>
+      <p class="chapeau">Les livres que vous avez aimés avec ♥. Ils sont gardés sur cet appareil.</p>
+    </div>
+    <ul class="grille" id="grille-likes" aria-label="Livres likés"></ul>
+    <div class="vide verre" id="vide-likes" hidden>
+      <span data-ico="coeur"></span>
+      <h3>Aucun livre liké pour l'instant</h3>
+      <p>Touchez ♥ sur un livre que vous aimez pour le retrouver ici.</p>
+      <a class="btn btn--or" href="#/bibliotheque">Parcourir la bibliothèque</a>
+    </div>
+  </section>
+
+  <!-- ============================ ONGLET : ESPACE AUTEURE ============================ -->
+  <section class="page" id="p-auteure" role="tabpanel" aria-labelledby="tab-auteure" tabindex="-1" hidden>
+
+    <!-- Porte d'entrée -->
+    <div id="auteure-verrou">
+      <div class="verrou-carte verre">
+        <div class="verrou-carte__rond" aria-hidden="true"><span data-ico="cadenas"></span></div>
+        <p class="surtitre">Espace réservé</p>
+        <h2 tabindex="-1">Espace de Daniella</h2>
+        <p class="chapeau">Saisissez votre identifiant pour publier vos livres, vos couvertures et vos PDF.</p>
+        <form id="form-acces" novalidate>
+          <div class="champ">
+            <label for="acces">Identifiant</label>
+            <input type="text" id="acces" name="acces" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Votre identifiant" aria-describedby="acces-erreur">
           </div>
-          <div class="panneau" role="tabpanel" id="panneau-contact" aria-labelledby="onglet-contact" tabindex="0" hidden></div>
+          <p class="statut statut--alerte" id="acces-erreur" role="alert" hidden></p>
+          <button class="btn btn--or" type="submit"><span data-ico="cadenas-ouvert"></span> Entrer</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tableau de bord (visible une fois l'identifiant validé) -->
+    <div id="auteure-espace" hidden>
+      <div class="entete-page">
+        <p class="surtitre">Espace auteure</p>
+        <h2 tabindex="-1">Bonjour Daniella</h2>
+        <p class="chapeau">Publiez un livre avec sa couverture, son résumé et son PDF : il apparaît tout de suite dans la bibliothèque.</p>
+        <div class="actions" style="margin-top:1rem">
+          <button class="btn btn--verre btn--petit" id="deconnexion" type="button"><span data-ico="deconnexion"></span> Se déconnecter</button>
+        </div>
+      </div>
+
+      <p class="statut statut--alerte" id="stockage-alerte" role="alert" hidden style="margin-bottom:1.2rem"></p>
+
+      <div class="auteure__grille">
+        <div class="carte-form verre">
+          <h3 id="form-titre">Publier un nouveau livre</h3>
+          <p id="form-sous-titre">Les champs marqués d'une étoile sont obligatoires. La couverture et le PDF peuvent être ajoutés plus tard.</p>
+          <form class="formulaire" id="form-livre" novalidate>
+            <div class="champ">
+              <label for="f-titre">Titre <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="f-titre" name="titre" maxlength="120" required autocomplete="off">
+            </div>
+            <div class="deux">
+              <div class="champ">
+                <label for="f-genre">Genre <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="f-genre" name="genre" maxlength="40" list="liste-genres" required autocomplete="off" placeholder="Roman, Poésie…">
+                <datalist id="liste-genres"></datalist>
+              </div>
+              <div class="champ">
+                <label for="f-annee">Année</label>
+                <input type="text" id="f-annee" name="annee" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="2026">
+              </div>
+            </div>
+            <div class="champ">
+              <label for="f-resume">Résumé <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="f-resume" name="resume" maxlength="3000" required></textarea>
+              <p class="champ__aide">Vous pouvez écrire plusieurs paragraphes.</p>
+            </div>
+            <div class="champ">
+              <span class="libelle" id="l-couv">Couverture (photo du livre)</span>
+              <label class="depot" aria-labelledby="l-couv">
+                <span class="depot__apercu" id="apercu-couv"><span data-ico="image"></span></span>
+                <span class="depot__texte"><strong id="depot-couv-titre">Choisir une photo</strong><span id="depot-couv-nom">JPG, PNG ou WebP · format portrait conseillé</span></span>
+                <input type="file" id="f-couv" name="couverture" accept="image/*">
+              </label>
+            </div>
+            <div class="champ">
+              <span class="libelle" id="l-pdf">Fichier PDF du livre</span>
+              <label class="depot" aria-labelledby="l-pdf">
+                <span class="depot__apercu depot__apercu--pdf" id="apercu-pdf"><span data-ico="fichier"></span></span>
+                <span class="depot__texte"><strong id="depot-pdf-titre">Choisir un PDF</strong><span id="depot-pdf-nom">Les lecteurs pourront le lire et le télécharger</span></span>
+                <input type="file" id="f-pdf" name="pdf" accept="application/pdf,.pdf">
+              </label>
+            </div>
+            <p class="statut" id="form-message" role="status" hidden></p>
+            <div class="actions">
+              <button class="btn btn--or" type="submit" id="form-envoyer"><span data-ico="plus"></span> <span id="form-envoyer-txt">Publier le livre</span></button>
+              <button class="btn btn--verre" type="button" id="form-annuler" hidden>Annuler la modification</button>
+            </div>
+          </form>
+        </div>
+
+        <div style="display:grid;gap:1.5rem">
+          <div class="carte-form verre">
+            <h3>Message d'accueil</h3>
+            <p>Ce message accueille chaque visiteur sur la page d'accueil.</p>
+            <form class="formulaire" id="form-message-accueil">
+              <div class="champ">
+                <label for="f-message" class="sr-only">Message d'accueil</label>
+                <textarea id="f-message" maxlength="400" style="min-height:130px"></textarea>
+              </div>
+              <div class="actions">
+                <button class="btn btn--or btn--petit" type="submit">Enregistrer</button>
+                <button class="btn btn--verre btn--petit" type="button" id="message-defaut">Rétablir l'original</button>
+              </div>
+            </form>
+          </div>
+          <div class="carte-form verre">
+            <h3>Bon à savoir</h3>
+            <p style="margin-bottom:0">Les livres que vous publiez ici sont enregistrés <strong>sur cet appareil</strong>. Pour qu'ils soient visibles par tous les visiteurs, utilisez le bouton « Mettre en ligne » de chaque livre.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloc">
+        <div class="bloc__entete">
+          <div>
+            <p class="surtitre">Sur cet appareil</p>
+            <h2 id="titre-pubs">Mes publications</h2>
+          </div>
+        </div>
+        <ul class="pubs" id="pubs" aria-labelledby="titre-pubs"></ul>
+        <div class="vide verre" id="vide-pubs" hidden>
+          <span data-ico="plume"></span>
+          <h3>Aucune publication pour l'instant</h3>
+          <p>Remplissez le formulaire ci-dessus pour publier votre premier livre.</p>
         </div>
       </div>
     </div>
@@ -572,30 +779,26 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
 <!-- ============================ PIED DE PAGE ============================ -->
 <footer class="pied">
   <div class="conteneur">
-    <div class="pied__grille">
+    <div class="pied__haut">
       <div>
-        <a class="marque" href="#accueil" aria-label="Daniela — Univers littéraire : retour à l'accueil">
+        <a class="marque" href="#/accueil" aria-label="Daniella — Univers littéraire : accueil">
           <span class="marque__sigle" aria-hidden="true">D</span>
-          <span class="marque__texte"><span class="marque__nom">Daniela</span><span class="marque__sous">Univers littéraire</span></span>
+          <span class="marque__texte"><span class="marque__nom">Daniella</span><span class="marque__sous">Univers littéraire</span></span>
         </a>
-        <p class="pied__phrase">Un espace pour découvrir les livres de Daniela, lire leurs résumés et accéder à leurs PDF.</p>
+        <p class="pied__phrase" style="margin-top:.9rem">Un espace pour découvrir les livres de Daniella, lire leurs résumés et ouvrir leurs PDF.</p>
       </div>
-      <nav aria-label="Navigation du pied de page">
-        <p class="pied__titre">Explorer</p>
-        <ul>
-          <li><a href="#accueil">Accueil</a></li>
-          <li><a href="#bibliotheque">Bibliothèque</a></li>
-          <li><a href="#apropos">À propos</a></li>
-        </ul>
-      </nav>
       <a class="btn btn--verre btn--petit" href="#haut">Retour en haut</a>
     </div>
     <div class="pied__bas">
-      <span>© <span id="annee">2026</span> Daniela — Univers littéraire</span>
-      <span>Lecture et téléchargement des PDF depuis chaque fiche, selon disponibilité.</span>
+      <span>© <span id="annee">2026</span> Daniella — Univers littéraire</span>
+      <span>Vos likes et vos préférés sont gardés sur votre appareil.</span>
     </div>
   </div>
 </footer>
+
+<p class="toast" id="toast" role="status" aria-live="polite"></p>
+
+<noscript><p style="position:fixed;inset:auto 1rem 1rem 1rem;z-index:300;padding:1rem;border-radius:14px;background:#2a1560;color:#fff;text-align:center">JavaScript est nécessaire pour utiliser cette application. Veuillez l'activer dans votre navigateur.</p></noscript>
 
 <!-- ============================ FICHE D'UN LIVRE ============================ -->
 <dialog class="fiche" id="fiche" aria-labelledby="fiche-titre">
@@ -613,10 +816,13 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
           <p class="fiche__resume" id="fiche-resume"></p>
           <p class="statut" id="fiche-statut" role="status" hidden></p>
           <div class="actions">
-            <button class="btn btn--or" type="button" id="btn-ouvrir"><span data-ico="lire"></span> Ouvrir le PDF</button>
-            <a class="btn btn--verre" id="btn-telecharger" href="#" download><span data-ico="telecharger"></span> Télécharger le PDF</a>
+            <button class="btn btn--or" type="button" id="fiche-lire"><span data-ico="lire"></span> Lire le PDF</button>
+            <a class="btn btn--verre" id="fiche-tel" href="#" download><span data-ico="telecharger"></span> Télécharger le PDF</a>
           </div>
-          <a class="lien-discret" id="lien-onglet" href="#" target="_blank" rel="noopener"><span data-ico="externe"></span> Ouvrir le PDF dans un nouvel onglet</a>
+          <div class="actions" style="margin-top:.8rem">
+            <button class="btn btn--verre btn--petit btn-bascule" type="button" id="fiche-like" data-bascule="likes" data-on="Aimé" data-off="J'aime" aria-pressed="false"><span data-ico="coeur"></span> <span class="bascule__txt">J'aime</span></button>
+            <button class="btn btn--verre btn--petit btn-bascule" type="button" id="fiche-fav" data-bascule="favoris" data-on="Dans mes préférés" data-off="Ajouter aux préférés" aria-pressed="false"><span data-ico="etoile"></span> <span class="bascule__txt">Ajouter aux préférés</span></button>
+          </div>
         </div>
       </div>
     </div>
@@ -628,6 +834,7 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
   <div class="lecteur__cadre verre">
     <div class="lecteur__barre">
       <h2 class="lecteur__titre" id="lecteur-titre"></h2>
+      <span class="lecteur__page" id="lecteur-page" role="status" hidden></span>
       <div class="lecteur__outils">
         <a class="btn btn--verre btn--petit" id="lecteur-telecharger" href="#" download><span data-ico="telecharger"></span> Télécharger</a>
         <a class="btn btn--verre btn--petit" id="lecteur-onglet" href="#" target="_blank" rel="noopener"><span data-ico="externe"></span> Nouvel onglet</a>
@@ -639,84 +846,100 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
   </div>
 </dialog>
 
+<!-- ============================ METTRE EN LIGNE POUR TOUS ============================ -->
+<dialog class="petit petit--large" id="partage" aria-labelledby="partage-titre">
+  <div class="petit__cadre verre">
+    <button class="fermer" type="button" id="partage-fermer" aria-label="Fermer"><span data-ico="fermer"></span></button>
+    <h2 id="partage-titre">Mettre en ligne pour tous</h2>
+    <p>Pour que tous les visiteurs voient ce livre, ajoutez-le au fichier du site en trois gestes.</p>
+    <ol class="etapes">
+      <li>Téléchargez les fichiers du livre, puis placez la couverture dans le dossier <strong>images/</strong> et le PDF dans le dossier <strong>livres/</strong>, à côté de <strong>index.html</strong>.
+        <div class="actions">
+          <button class="btn btn--verre btn--petit" type="button" id="partage-couv"><span data-ico="telecharger"></span> Couverture</button>
+          <button class="btn btn--verre btn--petit" type="button" id="partage-pdf"><span data-ico="telecharger"></span> PDF</button>
+        </div>
+      </li>
+      <li>Copiez cette ligne de code.
+        <div class="actions"><button class="btn btn--verre btn--petit" type="button" id="partage-copier"><span data-ico="copier"></span> <span id="partage-copier-txt">Copier le code</span></button></div>
+      </li>
+      <li>Dans <strong>index.html</strong>, collez-la dans le tableau <strong>LIVRES_PUBLICS</strong> (zone « À MODIFIER »), enregistrez, puis mettez le site en ligne.</li>
+    </ol>
+    <label class="sr-only" for="partage-code">Code à copier</label>
+    <textarea class="code" id="partage-code" readonly spellcheck="false"></textarea>
+  </div>
+</dialog>
+
+<!-- ============================ CONFIRMATION ============================ -->
+<dialog class="petit" id="confirm" aria-labelledby="confirm-titre" aria-describedby="confirm-texte">
+  <form method="dialog" class="petit__cadre verre">
+    <h2 id="confirm-titre"></h2>
+    <p id="confirm-texte"></p>
+    <div class="actions">
+      <button class="btn btn--verre" value="annuler" formnovalidate>Annuler</button>
+      <button class="btn btn--or" value="ok" id="confirm-ok" formnovalidate></button>
+    </div>
+  </form>
+</dialog>
+
 
 <!-- =====================================================================
-     ███  ZONE À MODIFIER — C'EST ICI QUE VOUS GÉREZ LE CONTENU DU SITE  ███
-     C'est la SEULE partie à toucher pour ajouter un livre ou changer les textes.
+     ███  ZONE À MODIFIER — RÉGLAGES DE L'APPLICATION  ███
      =====================================================================
 
-     ORGANISATION DES FICHIERS (tous au même niveau que index.html) :
+     1) PUBLIER (cas normal) : ouvrez l'onglet « Auteure », saisissez l'identifiant
+        ci-dessous, puis remplissez le formulaire (titre, genre, résumé, couverture, PDF).
+        Les livres sont enregistrés DANS LE NAVIGATEUR de l'appareil utilisé.
 
-         index.html
-         images/   → les couvertures   (ex. images/la-nuit-doree.jpg)
-         livres/   → les fichiers PDF  (ex. livres/la-nuit-doree.pdf)
+     2) METTRE UN LIVRE EN LIGNE POUR TOUS LES VISITEURS : dans « Mes publications »,
+        cliquez « Mettre en ligne », téléchargez les fichiers, copiez le code proposé
+        et collez-le dans le tableau LIVRES_PUBLICS plus bas.
 
-     COMMENT AJOUTER UN LIVRE :
-       1. Copiez la couverture dans le dossier  images/
-          (JPG, PNG ou WebP ; format portrait 2:3, par exemple 800 × 1200 px ; idéalement < 300 Ko)
-       2. Copiez le PDF dans le dossier  livres/
-       3. Copiez le MODÈLE ci-dessous, collez-le dans le tableau LIVRES, retirez les « // »
-          au début des lignes, puis remplissez les champs.
-       4. Séparez chaque livre par une virgule. Enregistrez, puis rechargez la page.
-       Les filtres de genre, les compteurs, la recherche et la page d'accueil se mettent à jour tout seuls.
-
-     CONSEILS :
-       • Noms de fichiers : minuscules, sans accents ni espaces (utilisez des tirets).
-         Sur un hébergeur web, « Livre.pdf » et « livre.pdf » ne sont PAS le même fichier.
-       • « id » : unique pour chaque livre (lettres minuscules, chiffres, tirets).
-       • « resume » : vous pouvez écrire plusieurs paragraphes avec \n\n entre eux.
-       • « annee » est facultatif. Laissez « pdf: "" » si le PDF n'est pas encore prêt :
-         le site affichera « PDF non disponible » au lieu d'un faux bouton.
-       • L'ordre du tableau = l'ordre d'affichage. Les 3 premiers livres apparaissent
-         aussi sur la page d'accueil.
+     ⚠ IMPORTANT — L'identifiant n'est PAS un vrai mot de passe : il est écrit dans ce
+       fichier, donc toute personne qui sait lire le code peut le voir. Il sert à
+       ouvrir l'espace de publication, pas à protéger des données secrètes. Ne
+       l'utilisez pas pour quoi que ce soit de confidentiel. Une vraie protection
+       (comptes, mot de passe, publication visible par tous en direct) demande un
+       serveur en plus de ce fichier.
      ===================================================================== -->
 <script>
-const SITE = {
-  autrice: "Daniela",
+const CONFIG = {
+  nom: "Daniella",
 
-  // Photo de Daniela (facultatif). Exemple : "images/daniela.jpg". Laissez vide pour afficher un monogramme.
-  photo: "",
+  // Identifiant à saisir dans l'onglet « Auteure » (majuscules/minuscules sans importance).
+  acces: "@Daniella",
 
-  // Texte de l'onglet « Présentation » : un élément = un paragraphe. Remplacez-les par ses propres mots.
-  presentation: [
-    "Daniela est une autrice qui commence à publier ses livres. Ce site est son espace : un lieu pour découvrir ses histoires, lire leurs résumés et accéder aux fichiers PDF de ses ouvrages.",
-    "De nouveaux livres rejoindront la bibliothèque au fil des publications."
-  ],
-
-  // Onglet « Contact » (facultatif). Laissez vide pour afficher un message d'attente.
-  contact: {
-    email: "",   // ex. "daniela@exemple.com"
-    liens: []    // ex. [ { nom: "Instagram", url: "https://www.instagram.com/..." } ]
-  }
+  // Message d'accueil par défaut (Daniella peut le modifier depuis son espace).
+  messageAccueil: "Bienvenue dans mon univers littéraire. Ici, je publie mes livres au fil de l'écriture : lisez les résumés, aimez vos histoires préférées et ouvrez les PDF directement."
 };
 
-const LIVRES = [
-  // ───────────── MODÈLE À COPIER (retirez les « // » puis remplissez) ─────────────
-  // {
-  //   id: "mon-premier-livre",
-  //   titre: "Titre du livre",
-  //   autrice: "Daniela",
-  //   genre: "Roman",
-  //   annee: "2026",                            // facultatif
-  //   couverture: "images/mon-premier-livre.jpg",
-  //   pdf: "livres/mon-premier-livre.pdf",
-  //   resume: "Le résumé du livre. Plusieurs paragraphes possibles avec \n\n entre eux."
-  // },
-  // ──────────────────────────────────────────────────────────────────────────────
+// Livres visibles par TOUS les visiteurs (fichiers placés dans images/ et livres/).
+// Le plus simple : utilisez le bouton « Mettre en ligne » de l'espace auteure, il écrit le code pour vous.
+// Modèle (retirez les « // ») :
+// {
+//   id: "mon-premier-livre",
+//   titre: "Titre du livre",
+//   genre: "Roman",
+//   annee: "2026",                          // facultatif
+//   couverture: "images/mon-premier-livre.jpg",
+//   pdf: "livres/mon-premier-livre.pdf",
+//   resume: "Le résumé du livre. Plusieurs paragraphes possibles avec \n\n entre eux."
+// },
+const LIVRES_PUBLICS = [
 
-  // ↓↓↓ Ajoutez vos livres ici (le tableau est volontairement vide : aucun livre fictif) ↓↓↓
 ];
 </script>
 
 
 <!-- =====================================================================
-     LOGIQUE DU SITE — il n'y a normalement rien à modifier ci-dessous.
+     LOGIQUE DE L'APPLICATION — il n'y a normalement rien à modifier ci-dessous.
      ===================================================================== -->
 <script>
 (function () {
   "use strict";
 
-  /* ---------- Outils ---------- */
+  /* =====================================================================
+     OUTILS
+     ===================================================================== */
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 
@@ -735,6 +958,7 @@ const LIVRES = [
   }
 
   const ICONES = {
+    maison: '<path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/>',
     recherche: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
     fermer: '<path d="M6 6l12 12M18 6 6 18"/>',
     livre: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/><path d="M9 8h7"/>',
@@ -744,7 +968,19 @@ const LIVRES = [
     valide: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
     alerte: '<path d="M12 4 2.5 20h19z"/><path d="M12 10v4.5"/><path d="M12 17.5v.01"/>',
     fleche: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
-    plume: '<path d="M20 4c-7 0-13 4-13 11l-2 5 5-2c7 0 10-6 10-14z"/><path d="M8 16 16 8"/>'
+    plume: '<path d="M20 4c-7 0-13 4-13 11l-2 5 5-2c7 0 10-6 10-14z"/><path d="M8 16 16 8"/>',
+    coeur: '<path d="M12 21s-7-4.35-9.3-9.07C1.2 8.7 3 5 6.6 5c2 0 3.5 1 5.4 3.1C13.9 6 15.4 5 17.4 5 21 5 22.8 8.7 21.3 11.93 19 16.65 12 21 12 21z"/>',
+    etoile: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',
+    cadenas: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5v-3a4 4 0 0 1 8 0v3"/>',
+    "cadenas-ouvert": '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5v-3a4 4 0 0 1 7.6-1.7"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    crayon: '<path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/>',
+    corbeille: '<path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M6.5 7l1 13h9l1-13"/><path d="M10 11v6M14 11v6"/>',
+    partage: '<path d="M12 16V4"/><path d="m7.5 8.5L12 4l4.5 4.5"/><path d="M5 15v4.5h14V15"/>',
+    copier: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
+    deconnexion: '<path d="M9 4.5H6A1.5 1.5 0 0 0 4.5 6v12A1.5 1.5 0 0 0 6 19.5h3"/><path d="M16 8l4 4-4 4"/><path d="M20 12H9"/>',
+    image: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m4 18 5-5 4 4 3-3 4 4"/>',
+    fichier: '<path d="M7 3.5h7l4 4V20.5H7z"/><path d="M14 3.5v4h4"/>'
   };
   function icone(nom, classe) {
     const s = creer("span", { class: "ico" + (classe ? " " + classe : ""), "aria-hidden": "true" });
@@ -753,203 +989,174 @@ const LIVRES = [
   }
   $$("[data-ico]").forEach(el => el.replaceWith(icone(el.dataset.ico, el.className)));
 
-  const norm = s => String(s == null ? "" : s).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  const norm = s => String(s == null ? "" : s).normalize("NFD").replace(/[̀-ͯ]/g, "")
     .replace(/œ/gi, "oe").replace(/[’‘]/g, "'").toLowerCase().trim();
   const slug = s => norm(s).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "livre";
   const pluriel = (n, mot) => n + " " + mot + (n > 1 ? "s" : "");
+  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+  const safeDecode = p => { try { return decodeURI(p); } catch (e) { return p; } };
   const chemin = p => {
     const s = String(p == null ? "" : p).trim();
     if (!s || /^\s*javascript:/i.test(s)) return "";
     try { return encodeURI(decodeURI(s)); } catch (e) { return s; }
   };
-  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
 
-  /* ---------- Données : lecture et validation de SITE et LIVRES ---------- */
-  const site = Object.assign({ autrice: "Daniela", photo: "", presentation: [], contact: {} },
-    (typeof SITE !== "undefined" && SITE) || {});
-  site.contact = site.contact || {};
+  /* =====================================================================
+     STOCKAGE SIMPLE (likes, préférés, message, session)
+     ===================================================================== */
+  const memoire = {};
+  let memAuteure = false;
+  function lire(cle, defaut) {
+    try { const v = localStorage.getItem("daniella:" + cle); if (v !== null) return JSON.parse(v); } catch (e) { /* stockage indisponible */ }
+    return cle in memoire ? memoire[cle] : defaut;
+  }
+  function ecrire(cle, val) {
+    memoire[cle] = val;
+    try { localStorage.setItem("daniella:" + cle, JSON.stringify(val)); } catch (e) { /* ignoré */ }
+  }
+  function retirer(cle) {
+    delete memoire[cle];
+    try { localStorage.removeItem("daniella:" + cle); } catch (e) { /* ignoré */ }
+  }
+  const session = {
+    lire() { try { return sessionStorage.getItem("daniella:auteure") === "1"; } catch (e) { return memAuteure; } },
+    ecrire(v) { memAuteure = v; try { if (v) sessionStorage.setItem("daniella:auteure", "1"); else sessionStorage.removeItem("daniella:auteure"); } catch (e) { /* ignoré */ } }
+  };
 
-  const livres = [];
+  /* =====================================================================
+     CONFIGURATION ET ÉTAT
+     ===================================================================== */
+  const cfg = Object.assign({ nom: "Daniella", acces: "@Daniella", messageAccueil: "Bienvenue." },
+    (typeof CONFIG !== "undefined" && CONFIG) || {});
+
+  const etat = {
+    onglet: "accueil",
+    requete: "", genre: "",
+    auteure: session.lire(),
+    stockage: true,
+    edition: null,
+    likes: new Set(lire("likes", [])),
+    favoris: new Set(lire("favoris", []))
+  };
+
+  /* ---------- Livres mis en ligne pour tous (tableau LIVRES_PUBLICS) ---------- */
+  const publics = [];
   const vus = new Set();
-  (typeof LIVRES !== "undefined" && Array.isArray(LIVRES) ? LIVRES : []).forEach((l, i) => {
+  (typeof LIVRES_PUBLICS !== "undefined" && Array.isArray(LIVRES_PUBLICS) ? LIVRES_PUBLICS : []).forEach((l, i) => {
     if (!l || typeof l !== "object") return;
     const titre = String(l.titre || "").trim();
-    if (!titre) { console.warn("[Daniela] Livre n°" + (i + 1) + " ignoré : le champ « titre » est manquant."); return; }
+    if (!titre) { console.warn("[Daniella] Livre public n°" + (i + 1) + " ignoré : « titre » manquant."); return; }
     const id = String(l.id || "").trim() || slug(titre);
-    if (vus.has(id)) { console.warn("[Daniela] Identifiant en double « " + id + " » : le livre « " + titre + " » est ignoré."); return; }
+    if (vus.has(id)) { console.warn("[Daniella] Identifiant en double « " + id + " » : livre ignoré."); return; }
     vus.add(id);
     const resume = String(l.resume || "").trim();
-    livres.push({
-      id: id,
-      titre: titre,
-      autrice: String(l.autrice || site.autrice || "Daniela").trim(),
-      genre: String(l.genre || "").trim() || "Autre",
-      annee: l.annee ? String(l.annee).trim() : "",
-      couverture: chemin(l.couverture),
-      pdf: chemin(l.pdf),
-      resume: resume,
+    publics.push({
+      id: id, titre: titre, genre: String(l.genre || "").trim() || "Autre",
+      annee: l.annee ? String(l.annee).trim() : "", resume: resume,
+      source: "public", date: 0,
+      couverture: chemin(l.couverture), pdf: chemin(l.pdf), aPdf: !!chemin(l.pdf), pdfNom: "",
       _recherche: norm(titre + " " + resume)
     });
   });
-  const parId = new Map(livres.map(l => [l.id, l]));
-  if (!livres.length) console.info("[Daniela] Aucun livre dans le tableau LIVRES : ajoutez-en dans la « ZONE À MODIFIER » (voir les commentaires).");
 
-  /* ---------- Couvertures (avec repli clair si le fichier est absent) ---------- */
-  function creerCouverture(l, opts) {
-    const priorite = !!(opts && opts.priorite);
-    const c = creer("div", { class: "couv" });
-    const vide = absente => {
-      c.classList.add("couv--vide");
-      c.textContent = "";
-      c.append(creer("div", { class: "couv__vide", role: "img", "aria-label": "Couverture de « " + l.titre + " » " + (absente ? "introuvable" : "à venir") },
-        icone("livre"),
-        creer("strong", { text: absente ? "Couverture introuvable" : "Couverture à venir" }),
-        absente ? creer("small", { text: safeDecode(l.couverture) }) : null));
-    };
-    if (!l.couverture) { vide(false); return c; }
-    c.append(creer("img", {
-      src: l.couverture, alt: "Couverture de « " + l.titre + " »", width: "400", height: "600",
-      loading: priorite ? "eager" : "lazy", decoding: "async",
-      onerror: () => { console.warn("[Daniela] Couverture introuvable : " + safeDecode(l.couverture)); vide(true); }
+  /* =====================================================================
+     BASE DE DONNÉES LOCALE (IndexedDB) : livres publiés depuis cet appareil
+     ===================================================================== */
+  let bdProm = null;
+  function bd() {
+    if (!bdProm) {
+      bdProm = new Promise((res, rej) => {
+        if (!window.indexedDB) { rej(new Error("IndexedDB indisponible")); return; }
+        let r;
+        try { r = indexedDB.open("daniella-univers-litteraire", 1); } catch (e) { rej(e); return; }
+        r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains("livres")) r.result.createObjectStore("livres", { keyPath: "id" }); };
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error || new Error("Ouverture impossible"));
+        r.onblocked = () => rej(new Error("Base bloquée"));
+      });
+    }
+    return bdProm;
+  }
+  function bdOp(mode, fn) {
+    return bd().then(db => new Promise((res, rej) => {
+      const t = db.transaction("livres", mode);
+      let sortie;
+      const rq = fn(t.objectStore("livres"));
+      if (rq) rq.onsuccess = () => { sortie = rq.result; };
+      t.oncomplete = () => res(sortie);
+      t.onerror = () => rej(t.error);
+      t.onabort = () => rej(t.error || new Error("Transaction annulée"));
     }));
-    return c;
   }
-  function safeDecode(p) { try { return decodeURI(p); } catch (e) { return p; } }
+  const bdTous = () => bdOp("readonly", s => s.getAll());
+  const bdPut = rec => bdOp("readwrite", s => s.put(rec));
+  const bdSupp = id => bdOp("readwrite", s => s.delete(id));
 
-  /* ---------- Accueil : pastilles et vitrine ---------- */
-  function rendreAccueil() {
-    const past = $("#pastilles");
-    past.textContent = "";
-    if (livres.length) {
-      const genres = new Set(livres.map(l => norm(l.genre))).size;
-      past.append(
-        creer("li", { class: "pastille" }, creer("strong", { text: String(livres.length) }), " " + (livres.length > 1 ? "livres" : "livre") + " en bibliothèque"),
-        creer("li", { class: "pastille" }, creer("strong", { text: String(genres) }), " " + (genres > 1 ? "genres" : "genre"))
-      );
-    } else {
-      past.append(creer("li", { class: "pastille" }, "Bibliothèque en préparation"));
+  /* ---------- URLs d'objets (couvertures et PDF locaux) ---------- */
+  const urlsCouv = new Map(), urlsPdf = new Map();
+  function urlBlob(map, id, blob) {
+    if (!blob) return "";
+    const u = map.get(id);
+    if (u && u.blob === blob) return u.url;
+    if (u) URL.revokeObjectURL(u.url);
+    const n = { blob: blob, url: URL.createObjectURL(blob) };
+    map.set(id, n);
+    return n.url;
+  }
+  function oublierUrls(id) {
+    [urlsCouv, urlsPdf].forEach(m => { const u = m.get(id); if (u) { URL.revokeObjectURL(u.url); m.delete(id); } });
+  }
+
+  let locaux = [];
+  function normaliserLocal(r) {
+    return {
+      id: r.id, titre: r.titre, genre: r.genre || "Autre", annee: r.annee || "", resume: r.resume || "",
+      source: "local", date: r.date || 0,
+      couverture: urlBlob(urlsCouv, r.id, r.couverture), pdf: "", aPdf: !!r.pdf, pdfNom: r.pdfNom || "",
+      _rec: r, _recherche: norm(r.titre + " " + (r.resume || ""))
+    };
+  }
+  async function chargerLocaux() {
+    try {
+      const recs = await bdTous();
+      locaux = (recs || []).sort((a, b) => (b.date || 0) - (a.date || 0)).map(normaliserLocal);
+      etat.stockage = true;
+    } catch (e) {
+      etat.stockage = false;
+      locaux = [];
+      console.warn("[Daniella] Stockage local indisponible :", e && e.message);
     }
-
-    const v = $("#vitrine");
-    v.textContent = "";
-    const sel = livres.slice(0, 3);
-    if (!sel.length) {
-      v.append(
-        creer("div", { class: "vitrine__halo", "aria-hidden": "true" }),
-        creer("div", { class: "embleme" },
-          creer("div", { class: "embleme__rond", "aria-hidden": "true" }, icone("plume")),
-          creer("p", { class: "embleme__legende", text: "Les premiers livres arrivent bientôt." }))
-      );
-      return;
-    }
-    const n = sel.length;
-    const reglages = {
-      1: [{ x: "0%", r: "0deg", s: 1, z: 2 }],
-      2: [{ x: "-30%", r: "-6deg", s: .95, z: 1 }, { x: "30%", r: "6deg", s: .95, z: 2 }],
-      3: [{ x: "-62%", r: "-9deg", s: .86, z: 1 }, { x: "0%", r: "0deg", s: 1, z: 3 }, { x: "62%", r: "9deg", s: .86, z: 1 }]
-    }[n];
-    const pile = creer("div", { class: "pile" });
-    sel.forEach((l, i) => {
-      const g = reglages[i];
-      pile.append(creer("button", {
-        type: "button", class: "pile__livre",
-        style: "--x:" + g.x + ";--r:" + g.r + ";--s:" + g.s + ";--z:" + g.z,
-        "aria-label": "Voir la fiche du livre « " + l.titre + " »",
-        onclick: e => ouvrirFiche(l.id, e.currentTarget)
-      }, creerCouverture(l, { priorite: true })));
-    });
-    v.append(creer("div", { class: "vitrine__halo", "aria-hidden": "true" }), pile);
+    cache = null;
   }
 
-  /* ---------- Bibliothèque : cartes, recherche, filtres ---------- */
-  const etat = { requete: "", genre: "" };
-  const grille = $("#grille");
+  let cache = null;
+  function tous() {
+    if (cache) return cache;
+    const idsPublics = new Set(publics.map(l => l.id));
+    cache = locaux.filter(l => !idsPublics.has(l.id)).concat(publics);
+    return cache;
+  }
+  const trouver = id => tous().find(l => l.id === id);
 
-  function creerCarte(l) {
-    const bouton = creer("button", {
-      type: "button", class: "btn btn--verre carte__bouton",
-      "aria-label": "Voir la fiche du livre « " + l.titre + " »",
-      onclick: e => { e.stopPropagation(); ouvrirFiche(l.id, e.currentTarget); }
-    }, icone("lire"), "Voir la fiche");
-    return creer("li", { class: "carte verre", dataset: { id: l.id, genre: norm(l.genre) }, onclick: () => ouvrirFiche(l.id, bouton) },
-      creer("div", { class: "carte__couv" }, creerCouverture(l)),
-      creer("div", { class: "carte__corps" },
-        creer("span", { class: "badge", text: l.genre }),
-        creer("h3", { class: "carte__titre", text: l.titre }),
-        creer("p", { class: "carte__resume" + (l.resume ? "" : " vide"), text: l.resume || "Résumé à venir." })),
-      creer("div", { class: "carte__pied" }, bouton));
+  function urlPdf(l) { return l.source === "public" ? l.pdf : urlBlob(urlsPdf, l.id, l._rec && l._rec.pdf); }
+  const nomFichier = l => (l.titre.replace(/[\\/:*?"<>|]+/g, "").trim() || "livre") + ".pdf";
+
+  /* =====================================================================
+     NOTIFICATION
+     ===================================================================== */
+  let minutToast = null;
+  function toast(msg) {
+    const t = $("#toast");
+    t.textContent = msg;
+    t.classList.add("visible");
+    clearTimeout(minutToast);
+    minutToast = setTimeout(() => t.classList.remove("visible"), 3800);
   }
 
-  function rendreFiltres() {
-    const zone = $("#filtres");
-    zone.textContent = "";
-    const groupes = new Map();
-    livres.forEach(l => {
-      const k = norm(l.genre);
-      const e = groupes.get(k) || { label: l.genre, n: 0 };
-      e.n++; groupes.set(k, e);
-    });
-    const ajouter = (cle, label, n) => zone.append(
-      creer("button", { type: "button", class: "puce", "aria-pressed": String(etat.genre === cle), dataset: { genre: cle } },
-        label, creer("span", { class: "puce__n", text: String(n) })));
-    ajouter("", "Tous", livres.length);
-    groupes.forEach((e, k) => ajouter(k, e.label, e.n));
-  }
-
-  function appliquerFiltres() {
-    const mots = norm(etat.requete).split(/\s+/).filter(Boolean);
-    let visibles = 0;
-    $$(".carte", grille).forEach(li => {
-      const l = parId.get(li.dataset.id);
-      const ok = (!etat.genre || li.dataset.genre === etat.genre) && mots.every(m => l._recherche.indexOf(m) !== -1);
-      li.hidden = !ok;
-      if (ok) { li.style.setProperty("--i", Math.min(visibles, 8)); visibles++; }
-    });
-    const total = livres.length;
-    const filtre = etat.genre || mots.length;
-    $("#compte").textContent = !visibles ? "Aucun résultat"
-      : filtre ? pluriel(visibles, "résultat") + " sur " + pluriel(total, "livre")
-      : pluriel(total, "livre") + " dans la bibliothèque";
-    $("#vide-recherche").hidden = !(total && !visibles);
-  }
-
-  function rendreBibliotheque() {
-    $("#vide-biblio").hidden = livres.length > 0;
-    $("#outils").hidden = !livres.length;
-    if (!livres.length) return;
-    livres.forEach(l => grille.append(creerCarte(l)));
-    rendreFiltres();
-    appliquerFiltres();
-
-    const champ = $("#recherche"), effacer = $("#effacer");
-    champ.addEventListener("input", debounce(() => {
-      etat.requete = champ.value;
-      effacer.hidden = !champ.value;
-      appliquerFiltres();
-    }, 120));
-    champ.addEventListener("input", () => { effacer.hidden = !champ.value; });
-    effacer.addEventListener("click", () => { champ.value = ""; etat.requete = ""; effacer.hidden = true; appliquerFiltres(); champ.focus(); });
-    $("#filtres").addEventListener("click", e => {
-      const b = e.target.closest(".puce");
-      if (!b) return;
-      etat.genre = b.dataset.genre;
-      $$(".puce", $("#filtres")).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-      appliquerFiltres();
-    });
-    $("#reinit").addEventListener("click", () => {
-      etat.requete = ""; etat.genre = ""; champ.value = ""; effacer.hidden = true;
-      $$(".puce", $("#filtres")).forEach(x => x.setAttribute("aria-pressed", String(x.dataset.genre === "")));
-      appliquerFiltres(); champ.focus();
-    });
-  }
-
-  /* ---------- Dialogues (fiche + lecteur) ---------- */
-  const fiche = $("#fiche"), lecteur = $("#lecteur");
-  let livreCourant = null;
-
-  function majVerrou() {
-    document.documentElement.classList.toggle("verrou", !!document.querySelector("dialog[open]"));
-  }
+  /* =====================================================================
+     DIALOGUES
+     ===================================================================== */
+  function majVerrou() { document.documentElement.classList.toggle("verrou", !!document.querySelector("dialog[open]")); }
   function ouvrirDialogue(d) {
     try {
       if (typeof d.showModal === "function") { if (!d.open) d.showModal(); }
@@ -962,21 +1169,51 @@ const LIVRES = [
     else { d.removeAttribute("open"); d.dispatchEvent(new Event("close")); }
     majVerrou();
   }
-  [fiche, lecteur].forEach(d => {
+  $$("dialog").forEach(d => {
     let bas = null;
     d.addEventListener("pointerdown", e => { bas = e.target; });
     d.addEventListener("click", e => { if (e.target === d && bas === d) fermerDialogue(d); bas = null; });
     d.addEventListener("close", majVerrou);
   });
-  $("#fiche-fermer").addEventListener("click", () => fermerDialogue(fiche));
-  $("#lecteur-fermer").addEventListener("click", () => fermerDialogue(lecteur));
+  $("#fiche-fermer").addEventListener("click", () => fermerDialogue($("#fiche")));
+  $("#lecteur-fermer").addEventListener("click", () => fermerDialogue($("#lecteur")));
+  $("#partage-fermer").addEventListener("click", () => fermerDialogue($("#partage")));
 
-  function majHash(valeur) {
-    try { history.replaceState(null, "", valeur); } catch (e) { /* file:// : sans importance */ }
+  function confirmer(titre, texte, libelleOk) {
+    return new Promise(resolve => {
+      const d = $("#confirm");
+      $("#confirm-titre").textContent = titre;
+      $("#confirm-texte").textContent = texte;
+      $("#confirm-ok").textContent = libelleOk || "Confirmer";
+      d.returnValue = "";
+      d.addEventListener("close", () => resolve(d.returnValue === "ok"), { once: true });
+      ouvrirDialogue(d);
+    });
   }
 
-  /* Vérification de la présence d'un PDF : « ok », « absent » ou « inconnu »
-     (inconnu = impossible de vérifier, par exemple en ouvrant index.html directement depuis le disque). */
+  /* =====================================================================
+     COUVERTURES (avec repli clair si l'image est absente)
+     ===================================================================== */
+  function creerCouverture(l, opts) {
+    const c = creer("div", { class: "couv" });
+    const vide = absente => {
+      c.classList.add("couv--vide");
+      c.textContent = "";
+      c.append(creer("div", { class: "couv__vide", role: "img", "aria-label": "Couverture de « " + l.titre + " » " + (absente ? "introuvable" : "à venir") },
+        icone("livre"),
+        creer("strong", { text: absente ? "Couverture introuvable" : "Couverture à venir" })));
+    };
+    if (!l.couverture) { vide(false); return c; }
+    c.append(creer("img", {
+      src: l.couverture, alt: "Couverture de « " + l.titre + " »", width: "400", height: "600",
+      loading: opts && opts.priorite ? "eager" : "lazy", decoding: "async",
+      onerror: () => { console.warn("[Daniella] Couverture introuvable : " + safeDecode(l.couverture)); vide(true); }
+    }));
+    if (opts && opts.lire && l.aPdf) c.append(creer("span", { class: "couv__lire", "aria-hidden": "true" }, icone("lire"), "Lire"));
+    return c;
+  }
+
+  /* Clic sur une couverture : lire le PDF directement, sinon ouvrir la fiche */
   const verifs = new Map();
   function verifierPdf(url) {
     if (!verifs.has(url)) {
@@ -991,9 +1228,203 @@ const LIVRES = [
     }
     return verifs.get(url);
   }
+  function lireOuFiche(l) {
+    if (!l.aPdf) { ouvrirFiche(l.id); return; }
+    if (l.source === "public") verifierPdf(l.pdf).then(r => { if (r === "absent") ouvrirFiche(l.id); else ouvrirLecteur(l); });
+    else ouvrirLecteur(l);
+  }
 
-  const nomFichier = l => (l.titre.replace(/[\\/:*?"<>|]+/g, "").trim() || "livre") + ".pdf";
+  /* =====================================================================
+     LIKES ET PRÉFÉRÉS
+     ===================================================================== */
+  function appliquerBascule(b) {
+    const on = etat[b.dataset.bascule].has(b.dataset.id);
+    b.setAttribute("aria-pressed", String(on));
+    const t = $(".bascule__txt", b);
+    if (t) t.textContent = on ? b.dataset.on : b.dataset.off;
+  }
+  function creerBascule(type, l) {
+    const like = type === "likes";
+    const b = creer("button", {
+      type: "button", class: "btn-icone", dataset: { bascule: type, id: l.id },
+      "aria-label": (like ? "J'aime : « " : "Préféré : « ") + l.titre + " »",
+      title: like ? "J'aime" : "Ajouter aux préférés",
+      onclick: e => { e.stopPropagation(); basculer(type, l.id); }
+    }, icone(like ? "coeur" : "etoile"));
+    appliquerBascule(b);
+    return b;
+  }
+  function basculer(type, id) {
+    const s = etat[type];
+    if (s.has(id)) s.delete(id); else s.add(id);
+    ecrire(type, Array.from(s));
+    $$('[data-bascule="' + type + '"]').filter(b => b.dataset.id === id).forEach(b => {
+      appliquerBascule(b);
+      if (s.has(id)) { b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); }
+    });
+    majCompteurs();
+    rendrePastilles();
+    if (etat.onglet === type) {
+      rendreListe(type, false);
+      const h = $("#p-" + type + " h2"); if (h) h.focus();
+    }
+  }
+  function majCompteurs() {
+    const ids = new Set(tous().map(l => l.id));
+    ["likes", "favoris"].forEach(t => {
+      const n = Array.from(etat[t]).filter(id => ids.has(id)).length;
+      const b = $("#tab-" + t + " .tab__n");
+      b.textContent = String(n);
+      b.hidden = !n;
+    });
+  }
 
+  /* =====================================================================
+     CARTES ET GRILLES
+     ===================================================================== */
+  function creerCarte(l, i) {
+    const bouton = creer("button", {
+      type: "button", class: "btn btn--verre carte__bouton",
+      "aria-label": "Voir la fiche du livre « " + l.titre + " »",
+      onclick: e => { e.stopPropagation(); ouvrirFiche(l.id); }
+    }, "Voir la fiche");
+    const couvBtn = creer("button", {
+      type: "button", class: "couv-btn",
+      "aria-label": l.aPdf ? "Lire le PDF de « " + l.titre + " »" : "Voir la fiche de « " + l.titre + " »",
+      onclick: e => { e.stopPropagation(); lireOuFiche(l); }
+    }, creerCouverture(l, { lire: true }));
+    const li = creer("li", { class: "carte verre", dataset: { id: l.id }, onclick: () => ouvrirFiche(l.id) },
+      creer("div", { class: "carte__couv" }, couvBtn),
+      creer("div", { class: "carte__corps" },
+        creer("span", { class: "badge", text: l.genre }),
+        creer("h3", { class: "carte__titre", text: l.titre }),
+        creer("p", { class: "carte__resume" + (l.resume ? "" : " vide"), text: l.resume || "Résumé à venir." })),
+      creer("div", { class: "carte__pied" }, creerBascule("likes", l), creerBascule("favoris", l), bouton));
+    li.style.setProperty("--i", Math.min(i, 8));
+    return li;
+  }
+  function rendreGrille(zone, liste, anime) {
+    zone.textContent = "";
+    zone.dataset.anime = anime ? "1" : "0";
+    liste.forEach((l, i) => zone.append(creerCarte(l, i)));
+  }
+
+  /* ---------- Accueil ---------- */
+  function salutation() {
+    const h = new Date().getHours();
+    return h >= 5 && h < 18 ? "Bonjour et bienvenue" : "Bonsoir et bienvenue";
+  }
+  function rendrePastilles() {
+    const liste = tous();
+    const past = $("#pastilles");
+    past.textContent = "";
+    if (liste.length) {
+      const genres = new Set(liste.map(l => norm(l.genre))).size;
+      const ids = new Set(liste.map(l => l.id));
+      const nl = Array.from(etat.likes).filter(id => ids.has(id)).length;
+      past.append(
+        creer("li", { class: "pastille" }, creer("strong", { text: String(liste.length) }), " " + (liste.length > 1 ? "livres" : "livre")),
+        creer("li", { class: "pastille" }, creer("strong", { text: String(genres) }), " " + (genres > 1 ? "genres" : "genre")),
+        nl ? creer("li", { class: "pastille" }, creer("strong", { text: String(nl) }), " " + (nl > 1 ? "livres aimés" : "livre aimé")) : null
+      );
+    } else past.append(creer("li", { class: "pastille" }, "Bibliothèque en préparation"));
+  }
+  function rendreAccueil() {
+    const liste = tous();
+    $("#salut").textContent = salutation();
+    $("#message-texte").textContent = lire("message", cfg.messageAccueil);
+    rendrePastilles();
+
+    const v = $("#vitrine");
+    v.textContent = "";
+    const sel = liste.slice(0, 3);
+    if (!sel.length) {
+      v.append(
+        creer("div", { class: "vitrine__halo", "aria-hidden": "true" }),
+        creer("div", { class: "embleme" },
+          creer("div", { class: "embleme__rond", "aria-hidden": "true" }, icone("plume")),
+          creer("p", { class: "embleme__legende", text: "Les premiers livres arrivent bientôt." })));
+    } else {
+      const n = sel.length;
+      const g = {
+        1: [{ x: "0%", r: "0deg", s: 1, z: 2 }],
+        2: [{ x: "-30%", r: "-6deg", s: .95, z: 1 }, { x: "30%", r: "6deg", s: .95, z: 2 }],
+        3: [{ x: "-62%", r: "-9deg", s: .86, z: 1 }, { x: "0%", r: "0deg", s: 1, z: 3 }, { x: "62%", r: "9deg", s: .86, z: 1 }]
+      }[n];
+      const pile = creer("div", { class: "pile" });
+      sel.forEach((l, i) => pile.append(creer("button", {
+        type: "button", class: "pile__livre", style: "--x:" + g[i].x + ";--r:" + g[i].r + ";--s:" + g[i].s + ";--z:" + g[i].z,
+        "aria-label": l.aPdf ? "Lire le PDF de « " + l.titre + " »" : "Voir la fiche de « " + l.titre + " »",
+        onclick: () => lireOuFiche(l)
+      }, creerCouverture(l, { priorite: true, lire: true }))));
+      v.append(creer("div", { class: "vitrine__halo", "aria-hidden": "true" }), pile);
+    }
+    $("#bloc-recentes").hidden = !liste.length;
+    rendreGrille($("#grille-recentes"), liste.slice(0, 4), true);
+  }
+
+  /* ---------- Bibliothèque : recherche + filtres ---------- */
+  function rendreFiltres() {
+    const zone = $("#filtres");
+    zone.textContent = "";
+    const groupes = new Map();
+    tous().forEach(l => { const k = norm(l.genre); const e = groupes.get(k) || { label: l.genre, n: 0 }; e.n++; groupes.set(k, e); });
+    if (etat.genre && !groupes.has(etat.genre)) etat.genre = "";
+    const ajouter = (cle, label, n) => zone.append(
+      creer("button", { type: "button", class: "puce", "aria-pressed": String(etat.genre === cle), dataset: { genre: cle } },
+        label, creer("span", { class: "puce__n", text: String(n) })));
+    ajouter("", "Tous", tous().length);
+    groupes.forEach((e, k) => ajouter(k, e.label, e.n));
+  }
+  function appliquerFiltres(anime) {
+    const mots = norm(etat.requete).split(/\s+/).filter(Boolean);
+    const liste = tous().filter(l => (!etat.genre || norm(l.genre) === etat.genre) && mots.every(m => l._recherche.indexOf(m) !== -1));
+    rendreGrille($("#grille-bibliotheque"), liste, anime);
+    const total = tous().length;
+    const filtre = etat.genre || mots.length;
+    $("#compte").textContent = !liste.length ? "Aucun résultat"
+      : filtre ? pluriel(liste.length, "résultat") + " sur " + pluriel(total, "livre")
+      : pluriel(total, "livre") + " dans la bibliothèque";
+    $("#vide-recherche").hidden = !(total && !liste.length);
+  }
+  function rendreBibliotheque() {
+    const total = tous().length;
+    $("#vide-biblio").hidden = total > 0;
+    $("#outils").hidden = !total;
+    if (!total) { $("#grille-bibliotheque").textContent = ""; $("#vide-recherche").hidden = true; return; }
+    rendreFiltres();
+    appliquerFiltres(true);
+  }
+  function brancherRecherche() {
+    const champ = $("#recherche"), effacer = $("#effacer");
+    champ.addEventListener("input", () => { effacer.hidden = !champ.value; });
+    champ.addEventListener("input", debounce(() => { etat.requete = champ.value; appliquerFiltres(false); }, 120));
+    effacer.addEventListener("click", () => { champ.value = ""; etat.requete = ""; effacer.hidden = true; appliquerFiltres(false); champ.focus(); });
+    $("#filtres").addEventListener("click", e => {
+      const b = e.target.closest(".puce");
+      if (!b) return;
+      etat.genre = b.dataset.genre;
+      $$(".puce", $("#filtres")).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      appliquerFiltres(true);
+    });
+    $("#reinit").addEventListener("click", () => {
+      etat.requete = ""; etat.genre = ""; champ.value = ""; effacer.hidden = true;
+      $$(".puce", $("#filtres")).forEach(x => x.setAttribute("aria-pressed", String(x.dataset.genre === "")));
+      appliquerFiltres(true); champ.focus();
+    });
+  }
+
+  /* ---------- Listes personnelles : préférés et likés ---------- */
+  function rendreListe(type, anime) {
+    const liste = tous().filter(l => etat[type].has(l.id));
+    rendreGrille($("#grille-" + type), liste, anime);
+    $("#vide-" + type).hidden = liste.length > 0;
+  }
+
+  /* =====================================================================
+     FICHE D'UN LIVRE
+     ===================================================================== */
+  let ficheCourante = null;
   function reglerLien(a, actif, url, l) {
     if (actif) {
       a.setAttribute("href", url);
@@ -1014,196 +1445,546 @@ const LIVRES = [
     if (ico) s.append(icone(ico));
     s.append(creer("span", {}, message, detail ? creer("small", { text: detail }) : null));
   }
-
   function configurerPdf(l) {
-    const ouvrir = $("#btn-ouvrir"), tel = $("#btn-telecharger"), onglet = $("#lien-onglet");
-    const regler = actif => {
-      ouvrir.disabled = !actif;
-      reglerLien(tel, actif, l.pdf, l);
-      reglerLien(onglet, actif, l.pdf, l);
-      onglet.hidden = !actif;
-    };
-    if (!l.pdf) {
-      regler(false);
-      definirStatut("alerte", "Le PDF de ce livre n'est pas encore disponible.");
-      return;
-    }
+    const lireBtn = $("#fiche-lire"), tel = $("#fiche-tel");
+    const regler = actif => { lireBtn.disabled = !actif; reglerLien(tel, actif, actif ? urlPdf(l) : "", l); };
+    if (!l.aPdf) { regler(false); definirStatut("alerte", "Le PDF de ce livre n'est pas encore disponible."); return; }
     regler(true);
     definirStatut("", "");
+    if (l.source === "local") { definirStatut("ok", "PDF disponible : lecture en ligne et téléchargement."); return; }
     verifierPdf(l.pdf).then(r => {
-      if (livreCourant !== l) return;
-      if (r === "absent") {
-        regler(false);
-        definirStatut("alerte", "Le PDF de ce livre est momentanément indisponible.", safeDecode(l.pdf));
-      } else if (r === "ok") {
-        definirStatut("ok", "PDF disponible : lecture en ligne et téléchargement.");
-      }
+      if (ficheCourante !== l) return;
+      if (r === "absent") { regler(false); definirStatut("alerte", "Le PDF de ce livre est momentanément indisponible.", safeDecode(l.pdf)); }
+      else if (r === "ok") definirStatut("ok", "PDF disponible : lecture en ligne et téléchargement.");
     });
   }
-
   function ouvrirFiche(id) {
-    const l = parId.get(id);
+    const l = trouver(id);
     if (!l) return;
-    livreCourant = l;
-    $("#fiche-couv").textContent = "";
-    $("#fiche-couv").append(creerCouverture(l, { priorite: true }));
+    ficheCourante = l;
+    const fiche = $("#fiche");
+    const couv = $("#fiche-couv");
+    couv.textContent = "";
+    couv.append(creer("button", {
+      type: "button", class: "couv-btn", "aria-label": l.aPdf ? "Lire le PDF de « " + l.titre + " »" : "Couverture de « " + l.titre + " »",
+      onclick: () => { if (l.aPdf) lireOuFiche(l); }
+    }, creerCouverture(l, { priorite: true, lire: true })));
     $("#fiche-genre").textContent = l.genre;
     $("#fiche-titre").textContent = l.titre;
-    $("#fiche-meta").textContent = ["par " + l.autrice, l.annee].filter(Boolean).join(" · ");
+    $("#fiche-meta").textContent = ["par Daniella", l.annee].filter(Boolean).join(" · ");
     const r = $("#fiche-resume");
     r.textContent = l.resume || "Le résumé de ce livre sera ajouté prochainement.";
     r.classList.toggle("vide", !l.resume);
+    ["#fiche-like", "#fiche-fav"].forEach(sel => { const b = $(sel); b.dataset.id = l.id; appliquerBascule(b); });
     configurerPdf(l);
     $(".fiche__defile", fiche).scrollTop = 0;
     ouvrirDialogue(fiche);
-    majHash("#livre-" + encodeURIComponent(l.id));
   }
-  fiche.addEventListener("close", () => {
-    livreCourant = null;
-    if (/^#livre-/.test(location.hash)) majHash("#bibliotheque");
-  });
-  $("#btn-ouvrir").addEventListener("click", () => { if (livreCourant && livreCourant.pdf) ouvrirLecteur(livreCourant); });
-  $("#btn-telecharger").addEventListener("click", e => { if (e.currentTarget.getAttribute("aria-disabled") === "true") e.preventDefault(); });
-  $("#lien-onglet").addEventListener("click", e => { if (e.currentTarget.getAttribute("aria-disabled") === "true") e.preventDefault(); });
+  $("#fiche").addEventListener("close", () => { ficheCourante = null; });
+  $("#fiche-lire").addEventListener("click", () => { if (ficheCourante) lireOuFiche(ficheCourante); });
+  $("#fiche-tel").addEventListener("click", e => { if (e.currentTarget.getAttribute("aria-disabled") === "true") e.preventDefault(); });
+  $("#fiche-like").addEventListener("click", () => { if (ficheCourante) basculer("likes", ficheCourante.id); });
+  $("#fiche-fav").addEventListener("click", () => { if (ficheCourante) basculer("favoris", ficheCourante.id); });
 
-  /* ---------- Lecteur PDF intégré, avec solutions de repli ---------- */
-  let minuteur = null;
-  function viderLecteur() {
-    clearTimeout(minuteur);
-    const c = $("#lecteur-corps");
-    const f = $("iframe", c);
+  /* =====================================================================
+     LECTEUR PDF : lecteur natif du navigateur, sinon pdf.js, sinon liens de secours
+     ===================================================================== */
+  const lect = $("#lecteur"), corps = $("#lecteur-corps");
+  let lectCtx = null;
+  function nettoyerLecteur() {
+    if (lectCtx) { try { lectCtx.nettoyer && lectCtx.nettoyer(); } catch (e) { /* ignoré */ } lectCtx = null; }
+    const f = $("iframe", corps);
     if (f) f.src = "about:blank";
-    c.textContent = "";
+    corps.textContent = "";
+    $("#lecteur-page").hidden = true;
   }
-  function integrerPdf(l) {
-    viderLecteur();
-    const c = $("#lecteur-corps");
-    const f = creer("iframe", { title: "Lecture du PDF : " + l.titre, src: l.pdf + "#view=FitH" });
+  lect.addEventListener("close", nettoyerLecteur);
+
+  function afficherSecoursLecteur(url, l, message) {
+    corps.textContent = "";
+    $("#lecteur-page").hidden = true;
+    corps.append(creer("div", { class: "lecteur__secours" },
+      icone("lire"),
+      creer("h3", { text: "Lecture intégrée indisponible" }),
+      creer("p", { text: message || "Votre navigateur n'affiche pas ce PDF directement dans la page. Ouvrez-le dans un nouvel onglet ou téléchargez-le." }),
+      creer("div", { class: "actions", style: "justify-content:center" },
+        creer("a", { class: "btn btn--or", href: url, target: "_blank", rel: "noopener" }, icone("externe"), "Ouvrir dans un nouvel onglet"),
+        creer("a", { class: "btn btn--verre", href: url, download: nomFichier(l) }, icone("telecharger"), "Télécharger le PDF"))));
+  }
+  function integrerIframe(url, l) {
+    corps.textContent = "";
+    const f = creer("iframe", { title: "Lecture du PDF : " + l.titre, src: url + "#view=FitH" });
+    let minuteur = null;
     const pret = () => { clearTimeout(minuteur); f.classList.add("pret"); };
     f.addEventListener("load", pret);
     minuteur = setTimeout(pret, 4000);
-    c.append(creer("div", { class: "lecteur__chargement", role: "status", text: "Chargement du PDF…" }), f);
+    lectCtx = { nettoyer: () => clearTimeout(minuteur) };
+    corps.append(creer("div", { class: "lecteur__chargement", role: "status", text: "Chargement du PDF…" }), f);
   }
-  function afficherSecours(type, l) {
-    viderLecteur();
-    const c = $("#lecteur-corps");
-    const sansPdf = type === "absent";
-    const boutons = sansPdf ? [] : [
-      creer("a", { class: "btn btn--or", href: l.pdf, target: "_blank", rel: "noopener" }, icone("externe"), "Ouvrir dans un nouvel onglet"),
-      creer("a", { class: "btn btn--verre", href: l.pdf, download: nomFichier(l) }, icone("telecharger"), "Télécharger le PDF"),
-      creer("button", { class: "btn btn--verre", type: "button", onclick: () => integrerPdf(l) }, "Essayer l'affichage intégré")
-    ];
-    c.append(creer("div", { class: "lecteur__secours" },
-      icone(sansPdf ? "alerte" : "lire"),
-      creer("h3", { text: sansPdf ? "PDF non disponible" : "Lecture intégrée non prise en charge" }),
-      creer("p", { text: sansPdf
-        ? "Le fichier PDF de ce livre n'est pas disponible pour le moment."
-        : "Votre navigateur n'affiche pas les PDF directement dans la page. Ouvrez le livre dans un nouvel onglet ou téléchargez-le." }),
-      creer("div", { class: "actions", style: "justify-content:center" }, boutons)));
+
+  /* pdf.js est chargé à la demande (uniquement si le navigateur ne sait pas afficher un PDF) */
+  const PDFJS_BASE = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+  let chargementPdfjs = null;
+  function chargerPdfjs() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    if (!chargementPdfjs) {
+      chargementPdfjs = new Promise((res, rej) => {
+        const s = document.createElement("script");
+        const stop = setTimeout(() => rej(new Error("délai dépassé")), 15000);
+        s.src = PDFJS_BASE + "pdf.min.js";
+        s.async = true;
+        s.onload = () => {
+          clearTimeout(stop);
+          if (window.pdfjsLib) { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_BASE + "pdf.worker.min.js"; res(window.pdfjsLib); }
+          else rej(new Error("pdf.js introuvable"));
+        };
+        s.onerror = () => { clearTimeout(stop); rej(new Error("réseau")); };
+        document.head.append(s);
+      }).catch(e => { chargementPdfjs = null; throw e; });
+    }
+    return chargementPdfjs;
   }
-  function ouvrirLecteur(l) {
+  async function lireAvecPdfjs(url, l) {
+    const ctx = { nettoyer() {} };
+    lectCtx = ctx;
+    corps.textContent = "";
+    corps.append(creer("div", { class: "lecteur__chargement", role: "status", text: "Préparation de la lecture…" }));
+    try {
+      const lib = await chargerPdfjs();
+      const rep = await fetch(url);
+      if (!rep.ok) throw new Error("HTTP " + rep.status);
+      const data = await rep.arrayBuffer();
+      if (lectCtx !== ctx) return;
+      const pdf = await lib.getDocument({ data: data }).promise;
+      if (lectCtx !== ctx) { if (pdf.destroy) pdf.destroy(); return; }
+
+      const p1 = await pdf.getPage(1);
+      const v1 = p1.getViewport({ scale: 1 });
+      const zone = creer("div", { class: "pdf-pages", tabindex: "0", "aria-label": "Pages de « " + l.titre + " »" });
+      const pages = [];
+      for (let n = 1; n <= pdf.numPages; n++) {
+        const canvas = creer("canvas", { "aria-hidden": "true" });
+        const cadre = creer("div", { class: "pdf-page", dataset: { n: String(n) } }, canvas);
+        cadre.style.aspectRatio = v1.width + " / " + v1.height;
+        zone.append(cadre);
+        pages.push({ n: n, cadre: cadre, canvas: canvas, rendu: false, enCours: false, visible: false });
+      }
+      corps.textContent = "";
+      corps.append(zone);
+
+      const liberer = p => { p.canvas.width = 1; p.canvas.height = 1; p.rendu = false; };
+      const rendre = async p => {
+        if (p.rendu || p.enCours || lectCtx !== ctx) return;
+        p.enCours = true;
+        try {
+          const page = await pdf.getPage(p.n);
+          const base = page.getViewport({ scale: 1 });
+          const largeur = Math.max(200, p.cadre.clientWidth);
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const vp = page.getViewport({ scale: (largeur / base.width) * dpr });
+          p.canvas.width = Math.floor(vp.width);
+          p.canvas.height = Math.floor(vp.height);
+          p.cadre.style.aspectRatio = base.width + " / " + base.height;
+          await page.render({ canvasContext: p.canvas.getContext("2d"), viewport: vp }).promise;
+          p.rendu = true;
+        } catch (e) { /* page ignorée */ }
+        p.enCours = false;
+        if (!p.visible && p.rendu) liberer(p);
+      };
+      let io = null;
+      if ("IntersectionObserver" in window) {
+        io = new IntersectionObserver(es => es.forEach(e => {
+          const p = pages[Number(e.target.dataset.n) - 1];
+          p.visible = e.isIntersecting;
+          if (e.isIntersecting) rendre(p); else if (p.rendu) liberer(p);
+        }), { root: zone, rootMargin: "150% 0px" });
+        pages.forEach(p => io.observe(p.cadre));
+      } else pages.slice(0, 15).forEach(p => { p.visible = true; rendre(p); });
+
+      const ind = $("#lecteur-page");
+      ind.hidden = false;
+      const majPage = () => {
+        const r = zone.getBoundingClientRect();
+        const milieu = r.top + r.height / 2;
+        let cur = 1;
+        for (const p of pages) {
+          const b = p.cadre.getBoundingClientRect();
+          if (b.top <= milieu && b.bottom >= milieu) { cur = p.n; break; }
+          if (b.top > milieu) break;
+          cur = p.n;
+        }
+        ind.textContent = "Page " + cur + " / " + pages.length;
+      };
+      let raf = 0;
+      zone.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; majPage(); }); }, { passive: true });
+      majPage();
+      ctx.nettoyer = () => { if (io) io.disconnect(); if (pdf.destroy) pdf.destroy(); };
+    } catch (e) {
+      if (lectCtx === ctx) afficherSecoursLecteur(url, l, "La lecture directe n'est pas possible sur cet appareil pour le moment (connexion nécessaire). Ouvrez le PDF dans un nouvel onglet ou téléchargez-le.");
+    }
+  }
+  async function ouvrirLecteur(l) {
+    if (!l || !l.aPdf) { if (l) ouvrirFiche(l.id); return; }
+    const url = urlPdf(l);
+    if (!url) { ouvrirFiche(l.id); return; }
+    nettoyerLecteur();
     $("#lecteur-titre").textContent = l.titre;
-    const tel = $("#lecteur-telecharger"), onglet = $("#lecteur-onglet");
-    reglerLien(tel, !!l.pdf, l.pdf, l);
-    reglerLien(onglet, !!l.pdf, l.pdf, l);
-    if (!l.pdf) afficherSecours("absent", l);
-    else if (navigator.pdfViewerEnabled === false) afficherSecours("integre", l);
-    else integrerPdf(l);
-    ouvrirDialogue(lecteur);
-  }
-  lecteur.addEventListener("close", viderLecteur);
-
-  /* ---------- Menu mobile ---------- */
-  const burger = $("#burger"), nav = $("#nav");
-  function basculerMenu(ouvert) {
-    burger.setAttribute("aria-expanded", String(ouvert));
-    burger.setAttribute("aria-label", ouvert ? "Fermer le menu" : "Ouvrir le menu");
-    nav.classList.toggle("ouvert", ouvert);
-  }
-  burger.addEventListener("click", () => basculerMenu(burger.getAttribute("aria-expanded") !== "true"));
-  nav.addEventListener("click", e => { if (e.target.closest("a")) basculerMenu(false); });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && burger.getAttribute("aria-expanded") === "true") { basculerMenu(false); burger.focus(); }
-  });
-  document.addEventListener("click", e => {
-    if (burger.getAttribute("aria-expanded") === "true" && !nav.contains(e.target) && !burger.contains(e.target)) basculerMenu(false);
-  });
-  if (window.matchMedia) {
-    const mq = window.matchMedia("(min-width: 861px)");
-    const quand = () => { if (mq.matches) basculerMenu(false); };
-    if (mq.addEventListener) mq.addEventListener("change", quand); else if (mq.addListener) mq.addListener(quand);
+    reglerLien($("#lecteur-telecharger"), true, url, l);
+    reglerLien($("#lecteur-onglet"), true, url, l);
+    ouvrirDialogue(lect);
+    if (navigator.pdfViewerEnabled !== false) integrerIframe(url, l);
+    else await lireAvecPdfjs(url, l);
   }
 
-  /* ---------- Navigation : section active + apparition au défilement ---------- */
-  const liensNav = $$(".nav a[data-section]");
-  const marquer = id => liensNav.forEach(a => a.dataset.section === id ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current"));
-  if ("IntersectionObserver" in window) {
-    const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) marquer(e.target.id); }), { rootMargin: "-40% 0px -55% 0px" });
-    ["accueil", "bibliotheque", "apropos"].forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
-    const rev = new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); o.unobserve(e.target); } }), { threshold: .08 });
-    $$(".reveal").forEach(el => rev.observe(el));
-  } else {
-    $$(".reveal").forEach(el => el.classList.add("visible"));
+  /* =====================================================================
+     ONGLETS (navigation par #/nom)
+     ===================================================================== */
+  const ONGLETS = ["accueil", "bibliotheque", "favoris", "likes", "auteure"];
+  const TITRES = { accueil: "", bibliotheque: "Bibliothèque", favoris: "Livres préférés", likes: "Livres likés", auteure: "Espace auteure" };
+  const tabs = $$('[role="tab"]');
+
+  function depuisHash() {
+    const m = location.hash.match(/^#\/([a-z]+)/);
+    return m && ONGLETS.indexOf(m[1]) !== -1 ? m[1] : "accueil";
   }
-
-  /* ---------- À propos : portrait, textes et onglets ---------- */
-  function rendreApropos() {
-    const p = $("#portrait");
-    const lettre = () => { p.textContent = ""; p.append(creer("span", { class: "portrait__lettre", "aria-hidden": "true", text: (site.autrice || "D").charAt(0).toUpperCase() })); };
-    const photo = chemin(site.photo);
-    if (photo) {
-      p.append(creer("img", { src: photo, alt: "Portrait de " + site.autrice, loading: "lazy", decoding: "async", onerror: lettre }));
-    } else lettre();
-
-    const pres = $("#panneau-presentation");
-    (Array.isArray(site.presentation) ? site.presentation : []).forEach(t => { if (String(t).trim()) pres.append(creer("p", { text: String(t) })); });
-    if (!pres.children.length) pres.append(creer("p", { class: "discret", text: "La présentation de Daniella sera ajoutée prochainement." }));
-
-    const pc = $("#panneau-contact");
-    const email = String(site.contact.email || "").trim();
-    const liens = (Array.isArray(site.contact.liens) ? site.contact.liens : []).filter(x => x && /^https?:\/\//i.test(String(x.url || "")) && String(x.nom || "").trim());
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) pc.append(creer("p", {}, "Écrire à Daniella : ", creer("a", { href: "mailto:" + email, text: email })));
-    if (liens.length) pc.append(creer("ul", {}, liens.map(x => creer("li", {}, creer("a", { href: x.url, target: "_blank", rel: "noopener noreferrer", text: x.nom })))));
-    if (!pc.children.length) pc.append(creer("p", { class: "discret", text: "Les coordonnées de Daniela seront ajoutées prochainement." }));
-
-    const tabs = $$('[role="tab"]');
-    const activer = (tab, focus) => {
-      tabs.forEach(t => {
-        const sel = t === tab;
-        t.setAttribute("aria-selected", String(sel));
-        t.tabIndex = sel ? 0 : -1;
-        document.getElementById(t.getAttribute("aria-controls")).hidden = !sel;
-      });
-      if (focus) tab.focus();
-    };
-    tabs.forEach((t, i) => {
-      t.addEventListener("click", () => activer(t, false));
-      t.addEventListener("keydown", e => {
-        const k = e.key;
-        if (k !== "ArrowRight" && k !== "ArrowLeft" && k !== "Home" && k !== "End") return;
-        e.preventDefault();
-        const cible = k === "Home" ? 0 : k === "End" ? tabs.length - 1 : (i + (k === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
-        activer(tabs[cible], true);
-      });
+  function afficherOnglet(nom) {
+    if (ONGLETS.indexOf(nom) === -1) nom = "accueil";
+    const change = etat.onglet !== nom;
+    etat.onglet = nom;
+    tabs.forEach(t => {
+      const sel = t.dataset.onglet === nom;
+      t.setAttribute("aria-selected", String(sel));
+      t.tabIndex = sel ? 0 : -1;
     });
+    $$(".page").forEach(p => { p.hidden = p.id !== "p-" + nom; });
+    if (nom === "likes" || nom === "favoris") rendreListe(nom, true);
+    if (nom === "auteure") rendreAuteure();
+    document.title = (TITRES[nom] ? TITRES[nom] + " · " : "") + "Daniella — Univers littéraire";
+    if (change) window.scrollTo(0, 0);
+  }
+  function allerA(nom) {
+    if (location.hash !== "#/" + nom) location.hash = "#/" + nom;
+    else afficherOnglet(nom);
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => allerA(t.dataset.onglet));
+    t.addEventListener("keydown", e => {
+      const k = e.key;
+      if (k !== "ArrowRight" && k !== "ArrowLeft" && k !== "Home" && k !== "End") return;
+      e.preventDefault();
+      const cible = k === "Home" ? 0 : k === "End" ? tabs.length - 1 : (i + (k === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+      tabs[cible].focus();
+      allerA(tabs[cible].dataset.onglet);
+    });
+  });
+  window.addEventListener("hashchange", () => afficherOnglet(depuisHash()));
+/* =====================================================================
+     ESPACE AUTEURE
+     ===================================================================== */
+  function majTabAuteure() {
+    const t = $("#tab-auteure");
+    const ancien = $(".ico", t);
+    if (ancien) ancien.replaceWith(icone(etat.auteure ? "cadenas-ouvert" : "cadenas"));
+  }
+  function accesValide(saisie) {
+    const n = s => String(s).replace(/\s+/g, "").toLowerCase();
+    return n(saisie) !== "" && n(saisie) === n(cfg.acces);
+  }
+  $("#form-acces").addEventListener("submit", e => {
+    e.preventDefault();
+    const champ = $("#acces"), err = $("#acces-erreur");
+    if (accesValide(champ.value)) {
+      etat.auteure = true; session.ecrire(true);
+      champ.value = ""; err.hidden = true;
+      majTabAuteure(); rendreAuteure();
+      const h = $("#auteure-espace h2"); if (h) h.focus();
+      toast("Bienvenue Daniella !");
+    } else {
+      const saisie = champ.value.replace(/\s+/g, "");
+      err.textContent = /^@?dani[eé]la$/i.test(saisie)
+        ? "Identifiant incorrect. Attention : Daniella s'écrit avec deux L."
+        : "Identifiant incorrect. Vérifiez l'orthographe et réessayez.";
+      err.hidden = false;
+      champ.classList.remove("secoue"); void champ.offsetWidth; champ.classList.add("secoue");
+      champ.focus();
+    }
+  });
+  $("#deconnexion").addEventListener("click", () => {
+    etat.auteure = false; session.ecrire(false);
+    annulerEdition();
+    majTabAuteure(); rendreAuteure();
+    toast("Vous êtes déconnectée.");
+  });
+
+  /* ---------- Message d'accueil ---------- */
+  $("#form-message-accueil").addEventListener("submit", e => {
+    e.preventDefault();
+    const v = $("#f-message").value.trim();
+    if (!v) { toast("Le message ne peut pas être vide."); return; }
+    ecrire("message", v);
+    $("#message-texte").textContent = v;
+    toast("Message d'accueil enregistré.");
+  });
+  $("#message-defaut").addEventListener("click", () => {
+    retirer("message");
+    $("#f-message").value = cfg.messageAccueil;
+    $("#message-texte").textContent = cfg.messageAccueil;
+    toast("Message d'origine rétabli.");
+  });
+
+  /* ---------- Fichiers : validation et préparation ---------- */
+  async function estPdf(fichier) {
+    const nomOk = /\.pdf$/i.test(fichier.name) || fichier.type === "application/pdf";
+    if (!nomOk) return false;
+    try {
+      const tete = new Uint8Array(await fichier.slice(0, 5).arrayBuffer());
+      return String.fromCharCode.apply(null, tete) === "%PDF-";
+    } catch (e) { return false; }
+  }
+  async function reduireImage(fichier) {
+    try {
+      const bmp = await createImageBitmap(fichier);
+      const ratio = Math.min(1, 1200 / bmp.width, 1800 / bmp.height);
+      const w = Math.max(1, Math.round(bmp.width * ratio)), h = Math.max(1, Math.round(bmp.height * ratio));
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#1b0d3a"; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(bmp, 0, 0, w, h);
+      if (bmp.close) bmp.close();
+      const blob = await new Promise(res => canvas.toBlob(res, "image/jpeg", 0.86));
+      return blob || fichier;
+    } catch (e) { return fichier; }
+  }
+  function telecharger(blob, nom) {
+    const u = URL.createObjectURL(blob);
+    const a = creer("a", { href: u, download: nom });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
   }
 
-  /* ---------- Lien direct vers une fiche (#livre-identifiant) ---------- */
-  function ouvrirDepuisHash() {
-    const m = location.hash.match(/^#livre-(.+)$/);
-    if (!m) return;
-    let id; try { id = decodeURIComponent(m[1]); } catch (e) { return; }
-    if (parId.has(id) && (!livreCourant || livreCourant.id !== id)) ouvrirFiche(id);
+  /* ---------- Formulaire de publication ---------- */
+  const formLivre = $("#form-livre");
+  let urlApercu = "";
+  function afficherMessage(type, texte) {
+    const m = $("#form-message");
+    m.textContent = "";
+    m.className = "statut" + (type ? " statut--" + type : "");
+    if (!texte) { m.hidden = true; return; }
+    m.hidden = false;
+    const ico = type === "ok" ? "valide" : type === "alerte" ? "alerte" : null;
+    if (ico) m.append(icone(ico));
+    m.append(creer("span", { text: texte }));
   }
-  window.addEventListener("hashchange", ouvrirDepuisHash);
+  function reinitApercus(couvActuelle) {
+    if (urlApercu) { URL.revokeObjectURL(urlApercu); urlApercu = ""; }
+    const ap = $("#apercu-couv");
+    ap.textContent = "";
+    if (couvActuelle) {
+      ap.append(creer("img", { src: couvActuelle, alt: "" }));
+      $("#depot-couv-titre").textContent = "Couverture actuelle";
+      $("#depot-couv-nom").textContent = "Choisissez un fichier pour la remplacer";
+    } else {
+      ap.append(icone("image"));
+      $("#depot-couv-titre").textContent = "Choisir une photo";
+      $("#depot-couv-nom").textContent = "JPG, PNG ou WebP · format portrait conseillé";
+    }
+    $("#apercu-pdf").textContent = ""; $("#apercu-pdf").append(icone("fichier"));
+    $("#depot-pdf-titre").textContent = "Choisir un PDF";
+    $("#depot-pdf-nom").textContent = "Les lecteurs pourront le lire et le télécharger";
+  }
+  $("#f-couv").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (urlApercu) URL.revokeObjectURL(urlApercu);
+    urlApercu = URL.createObjectURL(f);
+    const ap = $("#apercu-couv");
+    ap.textContent = "";
+    ap.append(creer("img", { src: urlApercu, alt: "Aperçu de la couverture choisie" }));
+    $("#depot-couv-titre").textContent = "Photo choisie";
+    $("#depot-couv-nom").textContent = f.name;
+  });
+  $("#f-pdf").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    $("#depot-pdf-titre").textContent = "PDF choisi";
+    $("#depot-pdf-nom").textContent = f.name + " · " + (f.size / 1048576).toFixed(1).replace(".", ",") + " Mo";
+  });
+  function annulerEdition() {
+    etat.edition = null;
+    formLivre.reset();
+    reinitApercus("");
+    afficherMessage("", "");
+    $("#form-titre").textContent = "Publier un nouveau livre";
+    $("#form-envoyer-txt").textContent = "Publier le livre";
+    $("#form-annuler").hidden = true;
+  }
+  $("#form-annuler").addEventListener("click", annulerEdition);
 
-  /* ---------- Démarrage ---------- */
-  $("#annee").textContent = String(new Date().getFullYear());
-  rendreAccueil();
-  rendreBibliotheque();
-  rendreApropos();
-  ouvrirDepuisHash();
+  function commencerEdition(l) {
+    etat.edition = l.id;
+    formLivre.reset();
+    formLivre.elements.titre.value = l.titre;
+    formLivre.elements.genre.value = l.genre;
+    formLivre.elements.annee.value = l.annee;
+    formLivre.elements.resume.value = l.resume;
+    reinitApercus(l.couverture);
+    if (l.aPdf) { $("#depot-pdf-titre").textContent = "PDF actuel"; $("#depot-pdf-nom").textContent = (l.pdfNom || "PDF enregistré") + " · choisissez un fichier pour le remplacer"; }
+    afficherMessage("", "");
+    $("#form-titre").textContent = "Modifier « " + l.titre + " »";
+    $("#form-envoyer-txt").textContent = "Enregistrer les modifications";
+    $("#form-annuler").hidden = false;
+    $("#form-titre").scrollIntoView({ behavior: "smooth", block: "start" });
+    formLivre.elements.titre.focus({ preventScroll: true });
+  }
+
+  formLivre.addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = formLivre.elements;
+    const titre = f.titre.value.trim(), genre = f.genre.value.trim(), resume = f.resume.value.trim(), annee = f.annee.value.trim();
+    const fc = f.couverture.files[0], fp = f.pdf.files[0];
+    const erreurs = [];
+    let premier = null;
+    const signaler = (champ, msg) => { erreurs.push(msg); if (!premier) premier = champ; };
+    if (!titre) signaler(f.titre, "Le titre est obligatoire.");
+    if (!genre) signaler(f.genre, "Le genre est obligatoire.");
+    if (!resume) signaler(f.resume, "Le résumé est obligatoire.");
+    if (annee && !/^\d{4}$/.test(annee)) signaler(f.annee, "L'année doit comporter 4 chiffres (ex. 2026).");
+    if (fc && !/^image\//.test(fc.type)) signaler(f.couverture, "La couverture doit être une image (JPG, PNG, WebP…).");
+    if (fc && fc.size > 30 * 1048576) signaler(f.couverture, "La photo est trop lourde (30 Mo maximum).");
+    if (fp && !(await estPdf(fp))) signaler(f.pdf, "Le fichier choisi n'est pas un PDF valide.");
+    if (fp && fp.size > 150 * 1048576) signaler(f.pdf, "Le PDF est trop lourd (150 Mo maximum).");
+    if (!etat.stockage) signaler(null, "Ce navigateur ne permet pas d'enregistrer des livres ici (navigation privée ?). Essayez avec une fenêtre normale.");
+    if (erreurs.length) {
+      afficherMessage("alerte", erreurs.join(" "));
+      if (premier && premier.focus) premier.focus();
+      return;
+    }
+
+    const bouton = $("#form-envoyer");
+    bouton.disabled = true;
+    afficherMessage("", "");
+    try {
+      const existant = etat.edition && locaux.find(l => l.id === etat.edition);
+      const rec = existant ? Object.assign({}, existant._rec) : { id: slug(titre) + "-" + Date.now().toString(36), date: Date.now() };
+      rec.titre = titre; rec.genre = genre; rec.annee = annee; rec.resume = resume;
+      if (fc) rec.couverture = await reduireImage(fc);
+      if (fp) { rec.pdf = fp; rec.pdfNom = fp.name; }
+      await bdPut(rec);
+      try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (x) { /* facultatif */ }
+      if (existant) { oublierUrls(rec.id); }
+      await chargerLocaux();
+      const modifie = !!existant;
+      annulerEdition();
+      rendreTout();
+      toast(modifie ? "Modifications enregistrées." : "Livre publié : « " + titre + " »");
+    } catch (err) {
+      const quota = err && (err.name === "QuotaExceededError" || /quota/i.test(String(err.message)));
+      afficherMessage("alerte", quota
+        ? "L'espace de stockage de l'appareil est insuffisant. Essayez avec un PDF plus léger."
+        : "La publication a échoué. Réessayez, ou utilisez un autre navigateur.");
+    } finally {
+      bouton.disabled = false;
+    }
+  });
+
+  /* ---------- Liste « Mes publications » ---------- */
+  function creerPub(l) {
+    const vignette = creer("div", { class: "pub__couv" }, creerCouverture(l));
+    const meta = [l.genre, l.annee, l.aPdf ? "PDF ajouté" : "Sans PDF"].filter(Boolean).join(" · ");
+    return creer("li", { class: "pub verre", dataset: { id: l.id } },
+      vignette,
+      creer("div", { class: "pub__info" }, creer("h4", { text: l.titre }), creer("p", { text: meta })),
+      creer("div", { class: "pub__actions" },
+        creer("button", { type: "button", class: "btn btn--verre btn--petit", onclick: () => commencerEdition(l) }, icone("crayon"), "Modifier"),
+        creer("button", { type: "button", class: "btn btn--verre btn--petit", onclick: () => ouvrirPartage(l) }, icone("partage"), "Mettre en ligne"),
+        creer("button", { type: "button", class: "btn btn--verre btn--petit btn--danger", onclick: () => supprimerLivre(l) }, icone("corbeille"), "Supprimer")));
+  }
+  async function supprimerLivre(l) {
+    const ok = await confirmer("Supprimer ce livre ?", "« " + l.titre + " » sera retiré de la bibliothèque de cet appareil. Cette action est définitive.", "Supprimer");
+    if (!ok) return;
+    try {
+      await bdSupp(l.id);
+      oublierUrls(l.id);
+      etat.likes.delete(l.id); etat.favoris.delete(l.id);
+      ecrire("likes", Array.from(etat.likes)); ecrire("favoris", Array.from(etat.favoris));
+      if (etat.edition === l.id) annulerEdition();
+      await chargerLocaux();
+      rendreTout();
+      toast("Livre supprimé.");
+    } catch (e) { toast("La suppression a échoué."); }
+  }
+  function rendreAuteure() {
+    $("#auteure-verrou").hidden = etat.auteure;
+    $("#auteure-espace").hidden = !etat.auteure;
+    if (!etat.auteure) return;
+    const al = $("#stockage-alerte");
+    al.hidden = etat.stockage;
+    if (!etat.stockage) { al.textContent = ""; al.append(icone("alerte"), creer("span", { text: "L'enregistrement de livres n'est pas disponible dans ce navigateur (navigation privée ?). Utilisez une fenêtre normale pour publier." })); }
+    $("#f-message").value = lire("message", cfg.messageAccueil);
+    const dl = $("#liste-genres");
+    dl.textContent = "";
+    const genres = [];
+    ["Roman", "Nouvelle", "Poésie", "Conte", "Fantasy", "Romance", "Jeunesse", "Policier", "Science-fiction", "Théâtre"].concat(tous().map(l => l.genre))
+      .forEach(g => { if (!genres.some(x => norm(x) === norm(g))) genres.push(g); });
+    genres.forEach(g => dl.append(creer("option", { value: g })));
+    const liste = $("#pubs");
+    liste.textContent = "";
+    locaux.forEach(l => liste.append(creerPub(l)));
+    $("#vide-pubs").hidden = locaux.length > 0;
+  }
+
+  /* ---------- Mettre en ligne pour tous : fichiers + ligne de code ---------- */
+  function ouvrirPartage(l) {
+    const rec = l._rec;
+    const base = slug(l.titre);
+    const ext = rec.couverture ? (rec.couverture.type === "image/png" ? "png" : rec.couverture.type === "image/webp" ? "webp" : "jpg") : "";
+    const nomC = rec.couverture ? base + "." + ext : "";
+    const nomP = rec.pdf ? base + ".pdf" : "";
+    $("#partage-titre").textContent = "Mettre en ligne « " + l.titre + " »";
+    const bc = $("#partage-couv"), bp = $("#partage-pdf");
+    bc.hidden = !nomC; bp.hidden = !nomP;
+    bc.onclick = () => telecharger(rec.couverture, nomC);
+    bp.onclick = () => telecharger(rec.pdf, nomP);
+    const j = JSON.stringify;
+    const code = "  {\n    id: " + j(l.id) + ",\n    titre: " + j(l.titre) + ",\n    genre: " + j(l.genre) + ",\n    annee: " + j(l.annee) +
+      ",\n    couverture: " + j(nomC ? "images/" + nomC : "") + ",\n    pdf: " + j(nomP ? "livres/" + nomP : "") + ",\n    resume: " + j(l.resume) + "\n  },";
+    const zone = $("#partage-code");
+    zone.value = code;
+    $("#partage-copier-txt").textContent = "Copier le code";
+    $("#partage-copier").onclick = async () => {
+      try { await navigator.clipboard.writeText(code); }
+      catch (e) { zone.focus(); zone.select(); try { document.execCommand("copy"); } catch (x) { /* ignoré */ } }
+      $("#partage-copier-txt").textContent = "Code copié";
+    };
+    ouvrirDialogue($("#partage"));
+  }
+
+  /* =====================================================================
+     DÉMARRAGE
+     ===================================================================== */
+  function rendreTout() {
+    cache = null;
+    rendreAccueil();
+    rendreBibliotheque();
+    if (etat.onglet === "likes" || etat.onglet === "favoris") rendreListe(etat.onglet, false);
+    majCompteurs();
+    if (etat.onglet === "auteure") rendreAuteure();
+  }
+  async function demarrer() {
+    $("#annee").textContent = String(new Date().getFullYear());
+    brancherRecherche();
+    majTabAuteure();
+    rendreTout();
+    afficherOnglet(depuisHash());
+    await chargerLocaux();
+    rendreTout();
+    if (etat.onglet === "auteure") rendreAuteure();
+  }
+  demarrer();
 })();
 </script>
 </body>
 </html>
+
+  
