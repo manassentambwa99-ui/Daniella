@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daniella — Univers littéraire</title>
+<meta name="description" content="Daniella — Univers littéraire : découvrez les livres de Daniela, lisez leurs résumés, puis ouvrez ou téléchargez les PDF.">
+<meta name="theme-color" content="#0a0414">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231b0d3a'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23efc25f' font-family='Georgia,serif' font-weight='700'%3ED%3C/text%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js");</script>
+
+<!-- Polices (facultatif) : si vous préférez un site 100 % hors ligne, supprimez ces 3 lignes.
+     Le site utilisera alors des polices de secours élégantes (Georgia / police système). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap">
+
+<style>
+/* =========================================================
+   1. VARIABLES — palette violet profond & or lumineux
+   ========================================================= */
+:root{
+  --bg-0:#0a0414; --bg-1:#12082a; --bg-2:#1b0d3a;
+  --violet-500:#7440de; --violet-300:#b799ff;
+  --gold-200:#fbebb8; --gold-300:#f6dc8f; --gold-400:#efc25f; --gold-500:#d9a63a;
+  --text:#f5effd; --text-2:#d3c7ea; --muted:#ab9dcb;
+  --glass-border:rgba(255,255,255,.16);
+  --blur:18px;
+  --radius-sm:12px; --radius:20px; --radius-lg:28px;
+  --shadow:0 18px 50px -14px rgba(5,0,18,.8), 0 1px 0 rgba(255,255,255,.05) inset;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  --font-title:"Cormorant Garamond","Playfair Display",Georgia,"Times New Roman",serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --header-h:72px;
+}
+@media (max-width:640px){ :root{ --blur:12px; --header-h:64px; } }
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; scroll-padding-top:calc(var(--header-h) + 16px); -webkit-text-size-adjust:100%; scrollbar-gutter:stable; color-scheme:dark; }
+html.verrou{ overflow:hidden; }
+body{
+  margin:0; min-height:100vh; overflow-x:hidden;
+  font-family:var(--font-body); font-size:1.0625rem; line-height:1.65;
+  color:var(--text); background:var(--bg-0);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  -webkit-tap-highlight-color:rgba(239,194,95,.2);
+}
+img{ max-width:100%; display:block; }
+a{ color:var(--gold-300); }
+h1,h2,h3{ margin:0; font-weight:600; }
+p{ margin:0; }
+ul{ margin:0; padding:0; list-style:none; }
+[hidden]{ display:none !important; }
+:where(a,button,input,[tabindex]):focus-visible{ outline:3px solid var(--gold-300); outline-offset:3px; }
+.sr-only{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+.conteneur{ width:min(1180px, 100% - 2 * clamp(1rem,4vw,2rem)); margin-inline:auto; }
+.ico{ display:inline-flex; width:1.2em; height:1.2em; flex:none; }
+.ico svg{ width:100%; height:100%; }
+.evitement{ position:fixed; left:1rem; top:-5rem; z-index:200; padding:.8rem 1.2rem; border-radius:12px; background:var(--gold-300); color:#2a1604; font-weight:600; text-decoration:none; transition:top .2s; }
+.evitement:focus{ top:1rem; }
+
+/* =========================================================
+   3. ARRIÈRE-PLAN ATMOSPHÉRIQUE (léger : transform / opacity uniquement)
+   ========================================================= */
+.fond{ position:fixed; inset:0; z-index:-3; background:
+  radial-gradient(1100px 700px at 10% -8%, rgba(116,64,222,.46), transparent 60%),
+  radial-gradient(900px 600px at 96% 8%, rgba(239,194,95,.14), transparent 55%),
+  radial-gradient(1000px 800px at 50% 112%, rgba(90,47,184,.42), transparent 62%),
+  linear-gradient(180deg,#12082a 0%,#0a0414 100%); }
+.halo{ position:fixed; z-index:-2; border-radius:50%; pointer-events:none; will-change:transform; }
+.halo--1{ width:52vmax; height:52vmax; left:-18vmax; top:6vh; background:radial-gradient(circle,rgba(124,77,255,.42),transparent 66%); animation:derive 28s ease-in-out infinite alternate; }
+.halo--2{ width:44vmax; height:44vmax; right:-16vmax; top:42vh; background:radial-gradient(circle,rgba(239,194,95,.20),transparent 66%); animation:derive 34s ease-in-out infinite alternate-reverse; }
+.etoiles{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+  background-image:
+    radial-gradient(1.3px 1.3px at 24px 34px, rgba(255,235,180,.95), transparent 60%),
+    radial-gradient(1px 1px at 130px 86px, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1.5px 1.5px at 228px 168px, rgba(255,226,150,.85), transparent 60%),
+    radial-gradient(1px 1px at 312px 44px, rgba(255,255,255,.65), transparent 60%);
+  background-size:340px 230px;
+  -webkit-mask-image:linear-gradient(#000 0%,transparent 85%); mask-image:linear-gradient(#000 0%,transparent 85%);
+  animation:scintille 7s ease-in-out infinite alternate; }
+
+/* =========================================================
+   4. PANNEAUX DE VERRE
+   ========================================================= */
+.verre{
+  position:relative; border:1px solid var(--glass-border); border-radius:var(--radius);
+  background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035));
+  box-shadow:var(--shadow);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(140%); backdrop-filter:blur(var(--blur)) saturate(140%);
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .verre{ background:rgba(34,18,70,.93); }
+}
+@supports ((mask-composite:exclude) or (-webkit-mask-composite:xor)){
+  .verre::before{
+    content:""; position:absolute; inset:0; border-radius:inherit; padding:1px; pointer-events:none;
+    background:linear-gradient(135deg,rgba(255,238,190,.6),rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(239,194,95,.4));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor;
+    mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite:exclude;
+  }
+}
+
+/* =========================================================
+   5. BOUTONS
+   ========================================================= */
+.btn{
+  position:relative; overflow:hidden; isolation:isolate;
+  display:inline-flex; align-items:center; justify-content:center; gap:.6rem;
+  min-height:48px; padding:.75rem 1.5rem; border-radius:999px; border:1px solid transparent;
+  font:600 1rem/1.2 var(--font-body); letter-spacing:.01em; text-decoration:none; text-align:center; cursor:pointer;
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), background-color .25s, border-color .25s, color .25s, filter .25s;
+}
+.btn--petit{ min-height:44px; padding:.55rem 1.1rem; font-size:.95rem; }
+.btn--or{
+  color:#2a1604; background:linear-gradient(135deg,#fbe9a8 0%,#efc25f 48%,#d29a2c 100%);
+  box-shadow:0 10px 28px -8px rgba(239,194,95,.55), 0 0 0 1px rgba(255,236,170,.5) inset, 0 1px 0 rgba(255,255,255,.6) inset;
+}
+.btn--or::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg,transparent 32%,rgba(255,255,255,.55) 50%,transparent 68%);
+  transform:translateX(-130%); transition:transform .75s var(--ease);
+}
+.btn--verre{
+  color:var(--text); background:rgba(255,255,255,.075); border-color:rgba(255,255,255,.24);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+}
+@media (hover:hover){
+  .btn--or:hover{ transform:translateY(-2px); filter:saturate(1.08); box-shadow:0 16px 36px -8px rgba(239,194,95,.7), 0 0 0 1px rgba(255,236,170,.6) inset, 0 1px 0 rgba(255,255,255,.7) inset; }
+  .btn--or:hover::after{ transform:translateX(130%); }
+  .btn--verre:hover{ transform:translateY(-2px); background:rgba(255,255,255,.13); border-color:rgba(239,194,95,.7); color:var(--gold-200); }
+}
+.btn:active{ transform:translateY(0) scale(.98); }
+.btn[disabled], .btn[aria-disabled="true"]{ opacity:.45; cursor:not-allowed; box-shadow:none; filter:grayscale(.35); transform:none; pointer-events:none; }
+
+/* =========================================================
+   6. EN-TÊTE ET MENU
+   ========================================================= */
+.entete{ position:sticky; top:0; z-index:60; height:var(--header-h); display:flex; align-items:center; }
+.entete::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(180deg,rgba(14,6,30,.82),rgba(14,6,30,.58));
+  border-bottom:1px solid rgba(255,255,255,.08);
+  -webkit-backdrop-filter:blur(16px) saturate(150%); backdrop-filter:blur(16px) saturate(150%);
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .entete::before{ background:rgba(14,6,30,.96); } }
+.entete::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:linear-gradient(90deg,transparent,rgba(239,194,95,.6),transparent); }
+.entete__interieur{ display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.marque{ display:inline-flex; align-items:center; gap:.8rem; text-decoration:none; color:var(--text); border-radius:14px; }
+.marque__sigle{
+  width:44px; height:44px; flex:none; display:grid; place-items:center; border-radius:50%;
+  font:700 1.7rem/1 var(--font-title); color:var(--gold-300);
+  background:radial-gradient(circle at 30% 25%,rgba(251,233,168,.25),rgba(116,64,222,.35) 60%,rgba(20,9,44,.7));
+  border:1px solid rgba(239,194,95,.6); box-shadow:0 0 24px -4px rgba(239,194,95,.45), inset 0 0 12px rgba(255,255,255,.08);
+}
+.marque__texte{ display:flex; flex-direction:column; line-height:1.1; }
+.marque__nom{ font:700 1.55rem/1 var(--font-title); letter-spacing:.01em; }
+.marque__sous{ margin-top:.2rem; font-size:.68rem; letter-spacing:.24em; text-transform:uppercase; color:var(--gold-300); font-weight:600; }
+.nav ul{ display:flex; gap:.25rem; }
+.nav a{ display:inline-flex; align-items:center; min-height:44px; padding:.5rem 1.05rem; border-radius:999px; color:var(--text-2); text-decoration:none; font-weight:500; transition:background-color .25s, color .25s, box-shadow .25s; }
+.nav a:hover{ color:#fff; background:rgba(255,255,255,.08); }
+.nav a[aria-current="true"]{ color:var(--gold-200); background:rgba(239,194,95,.12); box-shadow:inset 0 0 0 1px rgba(239,194,95,.38); }
+.burger{ display:none; width:48px; height:48px; border-radius:50%; border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.08); color:var(--text); cursor:pointer; place-items:center; transition:background-color .25s, border-color .25s; }
+.burger:hover{ border-color:rgba(239,194,95,.6); }
+.burger__barres{ position:relative; display:block; width:20px; height:14px; }
+.burger__barres i{ position:absolute; left:0; width:100%; height:2px; border-radius:2px; background:currentColor; transition:transform .3s var(--ease), opacity .2s, top .3s var(--ease); }
+.burger__barres i:nth-child(1){ top:0; } .burger__barres i:nth-child(2){ top:6px; } .burger__barres i:nth-child(3){ top:12px; }
+.burger[aria-expanded="true"] i:nth-child(1){ top:6px; transform:rotate(45deg); }
+.burger[aria-expanded="true"] i:nth-child(2){ opacity:0; }
+.burger[aria-expanded="true"] i:nth-child(3){ top:6px; transform:rotate(-45deg); }
+@media (max-width:860px){
+  .burger{ display:grid; }
+  .nav{
+    position:absolute; top:calc(100% + .5rem); left:.75rem; right:.75rem; padding:.6rem; border-radius:var(--radius);
+    background:linear-gradient(145deg,rgba(42,21,88,.95),rgba(18,8,40,.97));
+    border:1px solid rgba(239,194,95,.3); box-shadow:var(--shadow), 0 0 60px -20px rgba(239,194,95,.3);
+    -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px);
+    opacity:0; visibility:hidden; transform:translateY(-8px) scale(.98); transform-origin:top right;
+    transition:opacity .25s var(--ease), transform .25s var(--ease), visibility 0s linear .25s;
+  }
+  .nav.ouvert{ opacity:1; visibility:visible; transform:none; transition-delay:0s; }
+  .nav ul{ flex-direction:column; gap:.25rem; }
+  .nav a{ display:flex; min-height:52px; padding:.8rem 1.1rem; font-size:1.1rem; border-radius:14px; }
+}
+
+/* =========================================================
+   7. TITRES COMMUNS
+   ========================================================= */
+.surtitre{ display:inline-flex; align-items:center; gap:.7rem; font-size:.8rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--gold-300); }
+.surtitre::before{ content:""; width:2.2rem; height:1px; background:linear-gradient(90deg,transparent,var(--gold-400)); }
+h1,h2,.fiche__titre,.carte__titre,.lecteur__titre{ font-family:var(--font-title); }
+h2{ margin:.5rem 0 .8rem; font-size:clamp(2.1rem,5.2vw,3.3rem); line-height:1.08; letter-spacing:-.005em; text-wrap:balance; }
+.chapeau{ max-width:38rem; font-size:clamp(1.05rem,2.3vw,1.25rem); line-height:1.7; color:var(--text-2); }
+.or{ color:var(--gold-300); }
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .or{ background:linear-gradient(100deg,#fff2c4 0%,#f1c75f 40%,#d9a63a 70%,#fbe7a6 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+}
+
+/* =========================================================
+   8. ACCUEIL
+   ========================================================= */
+.accueil{ padding:clamp(2.5rem,7vw,6rem) 0 clamp(2.5rem,6vw,5rem); }
+.accueil__grille{ display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(2rem,5vw,4rem); align-items:center; }
+@media (max-width:900px){ .accueil__grille{ grid-template-columns:1fr; } }
+h1{ margin:.8rem 0 1.3rem; font-size:clamp(2.7rem,7.4vw,5.2rem); line-height:1.02; letter-spacing:-.012em; text-wrap:balance; }
+.actions{ display:flex; flex-wrap:wrap; gap:.8rem; }
+.accueil .actions{ margin-top:2rem; }
+.pastilles{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2rem; }
+.pastille{ padding:.4rem .95rem; border-radius:999px; font-size:.92rem; color:var(--text-2); border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.05); }
+.pastille strong{ color:var(--gold-300); font-weight:600; }
+
+.vitrine{ position:relative; min-height:clamp(330px,50vw,520px); display:grid; place-items:center; }
+.vitrine__halo{ position:absolute; width:86%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,rgba(239,194,95,.26),rgba(116,64,222,.24) 46%,transparent 70%); pointer-events:none; }
+.pile{ position:absolute; inset:0; animation:flotte 8s ease-in-out infinite; }
+.pile::after{ content:""; position:absolute; left:50%; bottom:5%; width:62%; height:24px; transform:translateX(-50%); background:radial-gradient(closest-side,rgba(0,0,0,.55),transparent); pointer-events:none; }
+.pile__livre{
+  position:absolute; left:50%; top:48%; z-index:var(--z,1); width:clamp(140px,38%,215px); padding:0; border:0; background:none; cursor:pointer; border-radius:8px;
+  transform:translate(-50%,-50%) translateX(var(--x,0%)) rotate(var(--r,0deg)) scale(var(--s,1));
+  transition:transform .5s var(--ease);
+}
+@media (hover:hover){ .pile__livre:hover{ transform:translate(-50%,-50%) translateX(var(--x,0%)) translateY(-12px) rotate(var(--r,0deg)) scale(calc(var(--s,1) * 1.04)); z-index:9; } }
+.embleme{ position:relative; display:grid; place-items:center; gap:1.2rem; text-align:center; padding:2rem; }
+.embleme__rond{ position:relative; width:min(250px,60vw); aspect-ratio:1; display:grid; place-items:center; border-radius:50%; color:var(--gold-300);
+  background:radial-gradient(circle at 30% 25%,rgba(251,233,168,.2),rgba(116,64,222,.3) 58%,rgba(20,9,44,.6));
+  border:1px solid rgba(239,194,95,.5); box-shadow:0 0 70px -10px rgba(239,194,95,.4), inset 0 0 44px rgba(255,255,255,.06); }
+.embleme__rond::before{ content:""; position:absolute; inset:-14px; border-radius:50%; border:1px dashed rgba(239,194,95,.38); animation:tourne 70s linear infinite; }
+.embleme__rond .ico{ width:42%; height:42%; }
+.embleme__rond .ico svg{ stroke-width:1.2; }
+.embleme__legende{ font:italic 500 1.35rem/1.3 var(--font-title); color:var(--text-2); max-width:18rem; }
+
+/* =========================================================
+   9. SECTIONS ET ANIMATION D'APPARITION
+   ========================================================= */
+.section{ padding:clamp(2.5rem,6vw,5.5rem) 0; }
+.entete-section{ max-width:44rem; margin-bottom:2rem; }
+.js .reveal{ opacity:0; transform:translateY(24px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+.js .reveal.visible{ opacity:1; transform:none; }
+
+/* =========================================================
+   10. BIBLIOTHÈQUE : RECHERCHE, FILTRES, CARTES
+   ========================================================= */
+.outils{ display:grid; gap:1rem; padding:clamp(.9rem,2.5vw,1.25rem); margin-bottom:1.75rem; }
+.recherche{ position:relative; }
+.recherche input{
+  width:100%; height:54px; padding:0 3.2rem 0 3.1rem; border-radius:999px;
+  border:1px solid rgba(255,255,255,.22); background:rgba(8,3,20,.5); color:var(--text);
+  font:400 1rem var(--font-body); text-align:left; transition:border-color .25s, box-shadow .25s, background-color .25s;
+  -webkit-appearance:none; appearance:none;
+}
+.recherche input::placeholder{ color:var(--muted); opacity:1; }
+.recherche input::-webkit-search-cancel-button{ display:none; }
+.recherche input:focus{ outline:none; border-color:var(--gold-400); box-shadow:0 0 0 4px rgba(239,194,95,.22); background:rgba(8,3,20,.7); }
+.recherche__loupe{ position:absolute; left:1.1rem; top:50%; transform:translateY(-50%); color:var(--gold-300); pointer-events:none; }
+.recherche__effacer{ position:absolute; right:.4rem; top:50%; transform:translateY(-50%); width:44px; height:44px; display:grid; place-items:center; border:0; border-radius:50%; background:transparent; color:var(--text-2); cursor:pointer; transition:background-color .2s, color .2s; }
+.recherche__effacer:hover{ background:rgba(255,255,255,.1); color:#fff; }
+.filtres{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.puce{
+  min-height:44px; padding:.45rem 1.05rem; border-radius:999px; border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.05); color:var(--text-2); font:500 .95rem var(--font-body); cursor:pointer;
+  transition:background-color .25s, border-color .25s, color .25s, box-shadow .25s, transform .25s var(--ease);
+}
+@media (hover:hover){ .puce:hover{ border-color:rgba(239,194,95,.7); color:var(--gold-200); background:rgba(255,255,255,.1); } }
+.puce:active{ transform:scale(.97); }
+.puce[aria-pressed="true"]{ background:linear-gradient(135deg,#fbe9a8,#e5b44f); border-color:transparent; color:#2a1604; font-weight:600; box-shadow:0 6px 18px -6px rgba(239,194,95,.65); }
+.puce__n{ margin-left:.4rem; opacity:.7; font-variant-numeric:tabular-nums; }
+.compte{ color:var(--muted); font-size:.95rem; }
+
+.grille{ display:grid; gap:clamp(1rem,2.5vw,1.75rem); grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr)); }
+.carte{
+  display:flex; flex-direction:column; gap:1.1rem; padding:clamp(.9rem,2vw,1.15rem); cursor:pointer;
+  animation:monte .6s var(--ease) backwards; animation-delay:calc(var(--i,0) * 70ms);
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
+}
+.carte[hidden]{ display:none !important; }
+@media (hover:hover){
+  .carte:hover{ transform:translateY(-6px); border-color:rgba(239,194,95,.5); box-shadow:0 26px 60px -16px rgba(0,0,0,.85), 0 0 0 1px rgba(239,194,95,.3), 0 0 44px -10px rgba(239,194,95,.28); }
+  .carte:hover .couv img{ transform:scale(1.04); }
+  .carte:hover .couv::after{ transform:translateX(7%); opacity:1; }
+}
+.carte:active{ transform:scale(.99); }
+.carte__corps{ display:flex; flex-direction:column; gap:.7rem; flex:1; align-items:flex-start; }
+.carte__titre{ font-size:clamp(1.5rem,2.4vw,1.75rem); line-height:1.14; letter-spacing:-.003em; text-wrap:balance; display:-webkit-box; -webkit-line-clamp:3; line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.carte__resume{ color:var(--text-2); font-size:.98rem; line-height:1.65; display:-webkit-box; -webkit-line-clamp:4; line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+.carte__resume.vide, .fiche__resume.vide{ font-style:italic; color:var(--muted); }
+.carte__bouton{ width:100%; }
+.badge{ display:inline-block; padding:.28rem .75rem; border-radius:999px; font-size:.76rem; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--gold-200); background:rgba(239,194,95,.12); border:1px solid rgba(239,194,95,.42); }
+@media (max-width:560px){
+  .grille{ grid-template-columns:1fr; }
+  .carte{ display:grid; grid-template-columns:116px 1fr; grid-template-areas:"couv corps" "pied pied"; column-gap:1rem; row-gap:.9rem; }
+  .carte__couv{ grid-area:couv; } .carte__corps{ grid-area:corps; } .carte__pied{ grid-area:pied; }
+  .carte__titre{ font-size:1.4rem; }
+  .carte__resume{ -webkit-line-clamp:5; line-clamp:5; }
+}
+
+/* ----- Couvertures ----- */
+.couv{
+  position:relative; isolation:isolate; overflow:hidden; aspect-ratio:2/3; width:100%;
+  border-radius:6px 12px 12px 6px; background:linear-gradient(160deg,#2a1560,#150a30);
+  box-shadow:0 18px 36px -14px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.13);
+}
+.couv img{ width:100%; height:100%; object-fit:cover; transition:transform .6s var(--ease); }
+.couv::before{ content:""; position:absolute; inset:0 auto 0 0; width:7%; z-index:2; pointer-events:none; background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(255,255,255,.15) 55%,rgba(0,0,0,0)); }
+.couv::after{ content:""; position:absolute; inset:0; z-index:2; pointer-events:none; opacity:.8; background:linear-gradient(115deg,rgba(255,255,255,.2) 0%,rgba(255,255,255,0) 32%,rgba(255,255,255,0) 62%,rgba(255,255,255,.1) 100%); transition:transform .8s var(--ease), opacity .4s; }
+.couv--vide::before,.couv--vide::after{ display:none; }
+.couv__vide{ position:absolute; inset:8px; display:grid; place-content:center; justify-items:center; gap:.5rem; padding:.8rem; text-align:center; border:1.5px dashed rgba(239,194,95,.55); border-radius:8px; color:var(--text-2); font-size:.85rem; line-height:1.35; }
+.couv__vide .ico{ width:2rem; height:2rem; color:var(--gold-300); }
+.couv__vide strong{ color:var(--text); font-weight:600; }
+.couv__vide small{ font-size:.72rem; color:var(--muted); word-break:break-all; }
+@media (max-width:560px){ .couv__vide{ font-size:.72rem; padding:.4rem; } .couv__vide small{ display:none; } .couv__vide .ico{ width:1.5rem; height:1.5rem; } }
+
+.vide{ display:grid; justify-items:center; gap:.8rem; text-align:center; padding:clamp(2rem,6vw,3.5rem) 1.5rem; }
+.vide .ico{ width:2.6rem; height:2.6rem; color:var(--gold-300); }
+.vide h3{ font:600 clamp(1.6rem,3.5vw,2.1rem)/1.15 var(--font-title); }
+.vide p{ max-width:34rem; color:var(--text-2); }
+
+/* =========================================================
+   11. DIALOGUES : FICHE ET LECTEUR
+   ========================================================= */
+dialog{ padding:0; border:0; background:transparent; color:var(--text); max-width:none; max-height:none; overflow:visible; }
+dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); animation:fondu .3s ease backwards; }
+.fermer{
+  position:absolute; top:.9rem; right:.9rem; z-index:5; width:46px; height:46px; display:grid; place-items:center; border-radius:50%;
+  border:1px solid rgba(255,255,255,.26); background:rgba(14,6,30,.7); color:var(--text); cursor:pointer;
+  transition:background-color .25s, border-color .25s, transform .25s var(--ease);
+}
+@media (hover:hover){ .fermer:hover{ border-color:var(--gold-400); color:var(--gold-200); transform:rotate(90deg); } }
+
+.fiche{ width:min(980px,calc(100vw - 2rem)); margin:auto; }
+.fiche__cadre{ border-radius:var(--radius-lg); background:linear-gradient(150deg,rgba(52,26,108,.9),rgba(20,9,44,.96)); box-shadow:0 40px 100px -20px rgba(0,0,0,.9), 0 0 80px -30px rgba(239,194,95,.3); }
+.fiche[open] .fiche__cadre{ animation:ouvre .45s var(--ease) backwards; }
+.fiche__defile{ max-height:calc(100vh - 2rem); max-height:calc(100dvh - 2rem); overflow:auto; overscroll-behavior:contain; padding:clamp(1.5rem,4vw,2.75rem); border-radius:var(--radius-lg); }
+.fiche__grille{ display:grid; grid-template-columns:minmax(0,300px) minmax(0,1fr); gap:clamp(1.5rem,3.5vw,2.75rem); align-items:start; }
+.fiche__couv{ position:sticky; top:0; }
+.fiche__texte{ display:flex; flex-direction:column; align-items:flex-start; padding-right:2.8rem; }
+.fiche__titre{ margin:.9rem 0 .4rem; font-size:clamp(2.1rem,5vw,3.2rem); line-height:1.07; letter-spacing:-.008em; text-wrap:balance; }
+.fiche__meta{ color:var(--gold-300); font-size:.98rem; letter-spacing:.03em; }
+.filet{ width:100%; height:1px; margin:1.3rem 0; background:linear-gradient(90deg,var(--gold-400),rgba(239,194,95,0)); }
+.fiche__resume{ max-width:62ch; font-size:1.075rem; line-height:1.85; color:var(--text); white-space:pre-line; hyphens:auto; }
+.statut{ display:flex; gap:.6rem; align-items:flex-start; margin-top:1.3rem; padding:.7rem .95rem; border-radius:var(--radius-sm); font-size:.93rem; line-height:1.45; color:var(--text-2); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); }
+.statut small{ display:block; margin-top:.15rem; color:var(--muted); font-size:.8rem; word-break:break-all; }
+.statut .ico{ margin-top:.1rem; }
+.statut--ok{ border-color:rgba(239,194,95,.4); } .statut--ok .ico{ color:var(--gold-300); }
+.statut--alerte{ border-color:rgba(255,160,140,.5); background:rgba(255,120,100,.08); } .statut--alerte .ico{ color:#ffb4a4; }
+.fiche .actions{ margin-top:1.4rem; }
+.lien-discret{ display:inline-flex; align-items:center; gap:.45rem; min-height:44px; margin-top:.4rem; color:var(--gold-300); font-size:.95rem; text-underline-offset:4px; }
+@media (max-width:720px){
+  .fiche__grille{ grid-template-columns:1fr; }
+  .fiche__couv{ position:static; max-width:200px; margin-inline:auto; }
+  .fiche__texte{ padding-right:0; }
+  .fiche__defile{ padding-top:3.8rem; }
+}
+@media (max-width:640px){
+  .fiche{ width:100vw; margin:auto 0 0; }
+  .fiche__cadre, .fiche__defile{ border-radius:24px 24px 0 0; }
+  .fiche__defile{ max-height:92vh; max-height:92dvh; padding-bottom:calc(1.5rem + env(safe-area-inset-bottom)); }
+  .fiche .actions{ width:100%; flex-direction:column; } .fiche .actions .btn{ width:100%; }
+}
+
+.lecteur{ width:min(1100px,calc(100vw - 1rem)); height:min(92vh,900px); height:min(92dvh,900px); margin:auto; }
+.lecteur__cadre{ display:flex; flex-direction:column; height:100%; overflow:hidden; border-radius:var(--radius-lg); background:linear-gradient(150deg,rgba(46,23,96,.94),rgba(16,7,36,.97)); box-shadow:0 40px 100px -20px rgba(0,0,0,.9); }
+.lecteur[open] .lecteur__cadre{ animation:ouvre .45s var(--ease) backwards; }
+.lecteur__barre{ display:flex; flex-wrap:wrap; align-items:center; gap:.7rem 1rem; padding:.8rem 1rem .8rem 1.4rem; border-bottom:1px solid rgba(255,255,255,.12); }
+.lecteur__titre{ flex:1 1 200px; min-width:0; font-size:1.4rem; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lecteur__outils{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.lecteur__corps{ position:relative; flex:1; min-height:0; background:rgba(8,3,20,.6); }
+.lecteur__chargement{ position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:.8rem; color:var(--text-2); }
+.lecteur__chargement::before{ content:""; width:34px; height:34px; border-radius:50%; border:3px solid rgba(239,194,95,.25); border-top-color:var(--gold-400); animation:tourne 1s linear infinite; }
+.lecteur iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent; opacity:0; transition:opacity .4s; }
+.lecteur iframe.pret{ opacity:1; }
+.lecteur__secours{ position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:1rem; padding:1.5rem; text-align:center; overflow:auto; }
+.lecteur__secours .ico{ width:2.6rem; height:2.6rem; color:var(--gold-300); }
+.lecteur__secours h3{ font:600 1.8rem/1.15 var(--font-title); }
+.lecteur__secours p{ max-width:32rem; color:var(--text-2); }
+.lecteur__aide{ padding:.6rem 1.4rem .75rem; font-size:.86rem; color:var(--muted); border-top:1px solid rgba(255,255,255,.1); }
+@media (max-width:640px){
+  .lecteur{ width:100vw; height:100vh; height:100dvh; }
+  .lecteur__cadre{ border-radius:0; }
+  .lecteur__barre{ padding:.7rem .8rem; }
+  .lecteur__titre{ flex-basis:100%; font-size:1.25rem; }
+  .lecteur__outils{ width:100%; } .lecteur__outils .btn{ flex:1 1 auto; }
+  .lecteur__aide{ padding-bottom:calc(.75rem + env(safe-area-inset-bottom)); }
+}
+
+/* =========================================================
+   12. À PROPOS (avec onglets)
+   ========================================================= */
+.apropos{ display:grid; grid-template-columns:minmax(0,300px) 1fr; gap:clamp(1.75rem,4vw,3.5rem); align-items:center; padding:clamp(1.5rem,4vw,3rem); }
+.apropos__portrait{ position:relative; margin:14px; }
+.apropos__portrait::before{ content:""; position:absolute; inset:-14px; border-radius:50%; border:1px dashed rgba(239,194,95,.38); animation:tourne 70s linear infinite; pointer-events:none; }
+.portrait{ position:relative; width:100%; aspect-ratio:1; display:grid; place-items:center; overflow:hidden; border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,rgba(251,233,168,.22),rgba(116,64,222,.3) 55%,rgba(20,9,44,.65));
+  border:1px solid rgba(239,194,95,.5); box-shadow:0 0 60px -10px rgba(239,194,95,.35), inset 0 0 40px rgba(255,255,255,.06); }
+.portrait img{ width:100%; height:100%; object-fit:cover; }
+.portrait__lettre{ font:600 clamp(5.5rem,14vw,8.5rem)/1 var(--font-title); color:var(--gold-300); }
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .portrait__lettre{ background:linear-gradient(160deg,#fff2c4,#e5b44f 60%,#b8841f); -webkit-background-clip:text; background-clip:text; color:transparent; }
+}
+.onglets{ display:flex; flex-wrap:wrap; gap:.4rem; width:fit-content; max-width:100%; margin:1.2rem 0; padding:.35rem; border-radius:999px; background:rgba(8,3,20,.5); border:1px solid rgba(255,255,255,.12); }
+.onglet{ min-height:44px; padding:.5rem 1.15rem; border:0; border-radius:999px; background:transparent; color:var(--text-2); font:500 .98rem var(--font-body); cursor:pointer; transition:background-color .25s, color .25s, box-shadow .25s; }
+@media (hover:hover){ .onglet:hover{ color:#fff; background:rgba(255,255,255,.08); } }
+.onglet[aria-selected="true"]{ background:linear-gradient(135deg,#fbe9a8,#e5b44f); color:#2a1604; font-weight:600; box-shadow:0 6px 18px -6px rgba(239,194,95,.6); }
+.panneau{ max-width:60ch; border-radius:var(--radius-sm); animation:fondu .4s ease backwards; }
+.panneau p{ margin-bottom:1rem; color:var(--text-2); }
+.panneau p:last-child{ margin-bottom:0; }
+.panneau ul{ display:grid; gap:.8rem; }
+.panneau li{ position:relative; padding-left:1.6rem; color:var(--text-2); }
+.panneau li::before{ content:""; position:absolute; left:.2rem; top:.7em; width:.5rem; height:.5rem; border-radius:50%; background:var(--gold-400); box-shadow:0 0 10px rgba(239,194,95,.7); }
+.panneau .discret{ color:var(--muted); font-style:italic; }
+@media (max-width:820px){
+  .apropos{ grid-template-columns:1fr; }
+  .apropos__portrait{ width:min(210px,60%); margin:14px auto; }
+}
+
+/* =========================================================
+   13. PIED DE PAGE
+   ========================================================= */
+.pied{ position:relative; margin-top:clamp(1.5rem,5vw,3rem); padding:clamp(2rem,5vw,3.5rem) 0 2rem; }
+.pied::before{ content:""; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(239,194,95,.6),transparent); }
+.pied__grille{ display:grid; grid-template-columns:1.4fr 1fr auto; gap:2rem; align-items:start; }
+.pied__phrase{ margin-top:1rem; max-width:26rem; color:var(--text-2); font-size:.98rem; }
+.pied__titre{ margin-bottom:.6rem; font-size:.78rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-300); }
+.pied nav a{ display:inline-flex; align-items:center; min-height:40px; color:var(--text-2); text-decoration:none; }
+.pied nav a:hover{ color:var(--gold-200); text-decoration:underline; text-underline-offset:4px; }
+.pied__bas{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:.5rem 1.5rem; margin-top:2rem; padding-top:1.25rem; border-top:1px solid rgba(255,255,255,.1); color:var(--muted); font-size:.92rem; }
+@media (max-width:760px){ .pied__grille{ grid-template-columns:1fr; } }
+
+/* =========================================================
+   14. ANIMATIONS (discrètes) ET ACCESSIBILITÉ DU MOUVEMENT
+   ========================================================= */
+@keyframes derive{ from{ transform:translate3d(0,0,0) scale(1); } to{ transform:translate3d(4vw,6vh,0) scale(1.08); } }
+@keyframes flotte{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+@keyframes monte{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:none; } }
+@keyframes ouvre{ from{ opacity:0; transform:translateY(22px) scale(.98); } to{ opacity:1; transform:none; } }
+@keyframes fondu{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes scintille{ from{ opacity:.32; } to{ opacity:.7; } }
+@keyframes tourne{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+  .js .reveal{ opacity:1; transform:none; }
+}
+@media (forced-colors:active){
+  .verre,.btn,.puce,.carte,.couv{ border:1px solid CanvasText; }
+}
+</style>
+</head>
+
+<body>
+<a class="evitement" href="#contenu">Aller au contenu</a>
+
+<div class="fond" aria-hidden="true"></div>
+<div class="halo halo--1" aria-hidden="true"></div>
+<div class="halo halo--2" aria-hidden="true"></div>
+<div class="etoiles" aria-hidden="true"></div>
+
+<!-- ============================ EN-TÊTE ============================ -->
+<header class="entete" id="haut">
+  <div class="conteneur entete__interieur">
+    <a class="marque" href="#accueil" aria-label="Daniela — Univers littéraire : retour à l'accueil">
+      <span class="marque__sigle" aria-hidden="true">D</span>
+      <span class="marque__texte">
+        <span class="marque__nom">Daniela</span>
+        <span class="marque__sous">Univers littéraire</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Ouvrir le menu">
+      <span class="burger__barres" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+
+    <nav class="nav" id="nav" aria-label="Navigation principale">
+      <ul>
+        <li><a href="#accueil" data-section="accueil" aria-current="true">Accueil</a></li>
+        <li><a href="#bibliotheque" data-section="bibliotheque">Bibliothèque</a></li>
+        <li><a href="#apropos" data-section="apropos">À propos</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="contenu" tabindex="-1">
+
+  <!-- ============================ ACCUEIL ============================ -->
+  <section class="accueil" id="accueil" aria-labelledby="titre-accueil">
+    <div class="conteneur accueil__grille">
+      <div class="accueil__texte">
+        <p class="surtitre">Autrice · Bibliothèque en ligne</p>
+        <h1 id="titre-accueil">Entrez dans l'univers de <span class="or">Daniela</span></h1>
+        <p class="chapeau">Daniela commence à publier ses livres. Découvrez ses histoires, parcourez les résumés, puis lisez ou téléchargez les PDF directement depuis ce site.</p>
+        <div class="actions">
+          <a class="btn btn--or" href="#bibliotheque">Découvrir la bibliothèque <span data-ico="fleche"></span></a>
+          <a class="btn btn--verre" href="#apropos">À propos de Daniela</a>
+        </div>
+        <ul class="pastilles" id="pastilles" aria-label="La bibliothèque en chiffres"></ul>
+      </div>
+      <div class="vitrine" id="vitrine"></div>
+    </div>
+  </section>
+
+  <!-- ============================ BIBLIOTHÈQUE ============================ -->
+  <section class="section reveal" id="bibliotheque" aria-labelledby="titre-bibliotheque">
+    <div class="conteneur">
+      <div class="entete-section">
+        <p class="surtitre">Bibliothèque</p>
+        <h2 id="titre-bibliotheque">Les livres de Daniela</h2>
+        <p class="chapeau">Recherchez un titre, filtrez par genre, puis ouvrez la fiche d'un livre pour lire son résumé complet et accéder à son PDF.</p>
+      </div>
+
+      <div class="outils verre" id="outils" hidden>
+        <div class="recherche">
+          <label class="sr-only" for="recherche">Rechercher dans les titres et les résumés</label>
+          <span class="recherche__loupe" data-ico="recherche"></span>
+          <input type="search" id="recherche" placeholder="Rechercher un titre, un mot…" autocomplete="off" enterkeyhint="search" spellcheck="false">
+          <button class="recherche__effacer" id="effacer" type="button" aria-label="Effacer la recherche" hidden><span data-ico="fermer"></span></button>
+        </div>
+        <div class="filtres" id="filtres" role="group" aria-label="Filtrer par genre"></div>
+        <p class="compte" id="compte" role="status" aria-live="polite"></p>
+      </div>
+
+      <ul class="grille" id="grille" aria-label="Liste des livres"></ul>
+
+      <div class="vide verre" id="vide-recherche" hidden>
+        <span data-ico="recherche"></span>
+        <h3>Aucun livre ne correspond</h3>
+        <p>Essayez un autre mot ou choisissez un autre genre.</p>
+        <button class="btn btn--or" id="reinit" type="button">Réinitialiser la recherche</button>
+      </div>
+
+      <div class="vide verre" id="vide-biblio" hidden>
+        <span data-ico="livre"></span>
+        <h3>La bibliothèque se prépare</h3>
+        <p>Les premiers livres de Daniela seront présentés ici dès leur publication. Revenez bientôt !</p>
+      </div>
+
+      <noscript><p class="vide verre">JavaScript est nécessaire pour afficher la bibliothèque. Veuillez l'activer dans votre navigateur.</p></noscript>
+    </div>
+  </section>
+
+  <!-- ============================ À PROPOS ============================ -->
+  <section class="section reveal" id="apropos" aria-labelledby="titre-apropos">
+    <div class="conteneur">
+      <div class="apropos verre">
+        <div class="apropos__portrait"><div class="portrait" id="portrait"></div></div>
+        <div class="apropos__contenu">
+          <p class="surtitre">À propos</p>
+          <h2 id="titre-apropos">À propos de Daniela</h2>
+
+          <div class="onglets" role="tablist" aria-label="Rubriques de présentation">
+            <button class="onglet" role="tab" type="button" id="onglet-presentation" aria-selected="true" aria-controls="panneau-presentation">Présentation</button>
+            <button class="onglet" role="tab" type="button" id="onglet-lecteurs" aria-selected="false" aria-controls="panneau-lecteurs" tabindex="-1">Pour les lecteurs</button>
+            <button class="onglet" role="tab" type="button" id="onglet-contact" aria-selected="false" aria-controls="panneau-contact" tabindex="-1">Contact</button>
+          </div>
+
+          <div class="panneau" role="tabpanel" id="panneau-presentation" aria-labelledby="onglet-presentation" tabindex="0"></div>
+          <div class="panneau" role="tabpanel" id="panneau-lecteurs" aria-labelledby="onglet-lecteurs" tabindex="0" hidden>
+            <ul>
+              <li>Parcourez la bibliothèque, recherchez un titre ou un mot du résumé et filtrez par genre.</li>
+              <li>Ouvrez la fiche d'un livre pour lire son résumé complet.</li>
+              <li>Lisez le PDF directement sur le site ou téléchargez-le pour le lire plus tard, lorsque le fichier est disponible.</li>
+            </ul>
+          </div>
+          <div class="panneau" role="tabpanel" id="panneau-contact" aria-labelledby="onglet-contact" tabindex="0" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================ PIED DE PAGE ============================ -->
+<footer class="pied">
+  <div class="conteneur">
+    <div class="pied__grille">
+      <div>
+        <a class="marque" href="#accueil" aria-label="Daniela — Univers littéraire : retour à l'accueil">
+          <span class="marque__sigle" aria-hidden="true">D</span>
+          <span class="marque__texte"><span class="marque__nom">Daniela</span><span class="marque__sous">Univers littéraire</span></span>
+        </a>
+        <p class="pied__phrase">Un espace pour découvrir les livres de Daniela, lire leurs résumés et accéder à leurs PDF.</p>
+      </div>
+      <nav aria-label="Navigation du pied de page">
+        <p class="pied__titre">Explorer</p>
+        <ul>
+          <li><a href="#accueil">Accueil</a></li>
+          <li><a href="#bibliotheque">Bibliothèque</a></li>
+          <li><a href="#apropos">À propos</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--verre btn--petit" href="#haut">Retour en haut</a>
+    </div>
+    <div class="pied__bas">
+      <span>© <span id="annee">2026</span> Daniela — Univers littéraire</span>
+      <span>Lecture et téléchargement des PDF depuis chaque fiche, selon disponibilité.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ FICHE D'UN LIVRE ============================ -->
+<dialog class="fiche" id="fiche" aria-labelledby="fiche-titre">
+  <div class="fiche__cadre verre">
+    <button class="fermer" type="button" id="fiche-fermer" aria-label="Fermer la fiche"><span data-ico="fermer"></span></button>
+    <div class="fiche__defile">
+      <div class="fiche__grille">
+        <div class="fiche__couv" id="fiche-couv"></div>
+        <div class="fiche__texte">
+          <span class="badge" id="fiche-genre"></span>
+          <h2 class="fiche__titre" id="fiche-titre"></h2>
+          <p class="fiche__meta" id="fiche-meta"></p>
+          <div class="filet" aria-hidden="true"></div>
+          <h3 class="sr-only">Résumé</h3>
+          <p class="fiche__resume" id="fiche-resume"></p>
+          <p class="statut" id="fiche-statut" role="status" hidden></p>
+          <div class="actions">
+            <button class="btn btn--or" type="button" id="btn-ouvrir"><span data-ico="lire"></span> Ouvrir le PDF</button>
+            <a class="btn btn--verre" id="btn-telecharger" href="#" download><span data-ico="telecharger"></span> Télécharger le PDF</a>
+          </div>
+          <a class="lien-discret" id="lien-onglet" href="#" target="_blank" rel="noopener"><span data-ico="externe"></span> Ouvrir le PDF dans un nouvel onglet</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- ============================ LECTEUR PDF ============================ -->
+<dialog class="lecteur" id="lecteur" aria-labelledby="lecteur-titre">
+  <div class="lecteur__cadre verre">
+    <div class="lecteur__barre">
+      <h2 class="lecteur__titre" id="lecteur-titre"></h2>
+      <div class="lecteur__outils">
+        <a class="btn btn--verre btn--petit" id="lecteur-telecharger" href="#" download><span data-ico="telecharger"></span> Télécharger</a>
+        <a class="btn btn--verre btn--petit" id="lecteur-onglet" href="#" target="_blank" rel="noopener"><span data-ico="externe"></span> Nouvel onglet</a>
+        <button class="btn btn--or btn--petit" id="lecteur-fermer" type="button"><span data-ico="fermer"></span> Fermer</button>
+      </div>
+    </div>
+    <div class="lecteur__corps" id="lecteur-corps"></div>
+    <p class="lecteur__aide">Le PDF ne s'affiche pas correctement ? Utilisez « Nouvel onglet » ou « Télécharger ».</p>
+  </div>
+</dialog>
+
+
+<!-- =====================================================================
+     ███  ZONE À MODIFIER — C'EST ICI QUE VOUS GÉREZ LE CONTENU DU SITE  ███
+     C'est la SEULE partie à toucher pour ajouter un livre ou changer les textes.
+     =====================================================================
+
+     ORGANISATION DES FICHIERS (tous au même niveau que index.html) :
+
+         index.html
+         images/   → les couvertures   (ex. images/la-nuit-doree.jpg)
+         livres/   → les fichiers PDF  (ex. livres/la-nuit-doree.pdf)
+
+     COMMENT AJOUTER UN LIVRE :
+       1. Copiez la couverture dans le dossier  images/
+          (JPG, PNG ou WebP ; format portrait 2:3, par exemple 800 × 1200 px ; idéalement < 300 Ko)
+       2. Copiez le PDF dans le dossier  livres/
+       3. Copiez le MODÈLE ci-dessous, collez-le dans le tableau LIVRES, retirez les « // »
+          au début des lignes, puis remplissez les champs.
+       4. Séparez chaque livre par une virgule. Enregistrez, puis rechargez la page.
+       Les filtres de genre, les compteurs, la recherche et la page d'accueil se mettent à jour tout seuls.
+
+     CONSEILS :
+       • Noms de fichiers : minuscules, sans accents ni espaces (utilisez des tirets).
+         Sur un hébergeur web, « Livre.pdf » et « livre.pdf » ne sont PAS le même fichier.
+       • « id » : unique pour chaque livre (lettres minuscules, chiffres, tirets).
+       • « resume » : vous pouvez écrire plusieurs paragraphes avec \n\n entre eux.
+       • « annee » est facultatif. Laissez « pdf: "" » si le PDF n'est pas encore prêt :
+         le site affichera « PDF non disponible » au lieu d'un faux bouton.
+       • L'ordre du tableau = l'ordre d'affichage. Les 3 premiers livres apparaissent
+         aussi sur la page d'accueil.
+     ===================================================================== -->
+<script>
+const SITE = {
+  autrice: "Daniela",
+
+  // Photo de Daniela (facultatif). Exemple : "images/daniela.jpg". Laissez vide pour afficher un monogramme.
+  photo: "",
+
+  // Texte de l'onglet « Présentation » : un élément = un paragraphe. Remplacez-les par ses propres mots.
+  presentation: [
+    "Daniela est une autrice qui commence à publier ses livres. Ce site est son espace : un lieu pour découvrir ses histoires, lire leurs résumés et accéder aux fichiers PDF de ses ouvrages.",
+    "De nouveaux livres rejoindront la bibliothèque au fil des publications."
+  ],
+
+  // Onglet « Contact » (facultatif). Laissez vide pour afficher un message d'attente.
+  contact: {
+    email: "",   // ex. "daniela@exemple.com"
+    liens: []    // ex. [ { nom: "Instagram", url: "https://www.instagram.com/..." } ]
+  }
+};
+
+const LIVRES = [
+  // ───────────── MODÈLE À COPIER (retirez les « // » puis remplissez) ─────────────
+  // {
+  //   id: "mon-premier-livre",
+  //   titre: "Titre du livre",
+  //   autrice: "Daniela",
+  //   genre: "Roman",
+  //   annee: "2026",                            // facultatif
+  //   couverture: "images/mon-premier-livre.jpg",
+  //   pdf: "livres/mon-premier-livre.pdf",
+  //   resume: "Le résumé du livre. Plusieurs paragraphes possibles avec \n\n entre eux."
+  // },
+  // ──────────────────────────────────────────────────────────────────────────────
+
+  // ↓↓↓ Ajoutez vos livres ici (le tableau est volontairement vide : aucun livre fictif) ↓↓↓
+];
+</script>
+
+
+<!-- =====================================================================
+     LOGIQUE DU SITE — il n'y a normalement rien à modifier ci-dessous.
+     ===================================================================== -->
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Outils ---------- */
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  function creer(tag, props, ...enfants) {
+    const n = document.createElement(tag);
+    Object.entries(props || {}).forEach(([k, v]) => {
+      if (v === undefined || v === null || v === false) return;
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (k === "dataset") Object.assign(n.dataset, v);
+      else if (k.slice(0, 2) === "on" && typeof v === "function") n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? "" : v);
+    });
+    enfants.flat().forEach(c => { if (c !== undefined && c !== null && c !== false) n.append(c); });
+    return n;
+  }
+
+  const ICONES = {
+    recherche: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    fermer: '<path d="M6 6l12 12M18 6 6 18"/>',
+    livre: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/><path d="M9 8h7"/>',
+    lire: '<path d="M2 5.5C4.5 4 8 4 12 6.5c4-2.5 7.5-2.5 10-1v13c-2.5-1.5-6-1.5-10 1-4-2.5-7.5-2.5-10-1z"/><path d="M12 6.5v13"/>',
+    telecharger: '<path d="M12 4v11"/><path d="m7.5 11 4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/>',
+    externe: '<path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+    valide: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+    alerte: '<path d="M12 4 2.5 20h19z"/><path d="M12 10v4.5"/><path d="M12 17.5v.01"/>',
+    fleche: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+    plume: '<path d="M20 4c-7 0-13 4-13 11l-2 5 5-2c7 0 10-6 10-14z"/><path d="M8 16 16 8"/>'
+  };
+  function icone(nom, classe) {
+    const s = creer("span", { class: "ico" + (classe ? " " + classe : ""), "aria-hidden": "true" });
+    s.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">' + (ICONES[nom] || "") + "</svg>";
+    return s;
+  }
+  $$("[data-ico]").forEach(el => el.replaceWith(icone(el.dataset.ico, el.className)));
+
+  const norm = s => String(s == null ? "" : s).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/œ/gi, "oe").replace(/[’‘]/g, "'").toLowerCase().trim();
+  const slug = s => norm(s).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "livre";
+  const pluriel = (n, mot) => n + " " + mot + (n > 1 ? "s" : "");
+  const chemin = p => {
+    const s = String(p == null ? "" : p).trim();
+    if (!s || /^\s*javascript:/i.test(s)) return "";
+    try { return encodeURI(decodeURI(s)); } catch (e) { return s; }
+  };
+  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+  /* ---------- Données : lecture et validation de SITE et LIVRES ---------- */
+  const site = Object.assign({ autrice: "Daniela", photo: "", presentation: [], contact: {} },
+    (typeof SITE !== "undefined" && SITE) || {});
+  site.contact = site.contact || {};
+
+  const livres = [];
+  const vus = new Set();
+  (typeof LIVRES !== "undefined" && Array.isArray(LIVRES) ? LIVRES : []).forEach((l, i) => {
+    if (!l || typeof l !== "object") return;
+    const titre = String(l.titre || "").trim();
+    if (!titre) { console.warn("[Daniela] Livre n°" + (i + 1) + " ignoré : le champ « titre » est manquant."); return; }
+    const id = String(l.id || "").trim() || slug(titre);
+    if (vus.has(id)) { console.warn("[Daniela] Identifiant en double « " + id + " » : le livre « " + titre + " » est ignoré."); return; }
+    vus.add(id);
+    const resume = String(l.resume || "").trim();
+    livres.push({
+      id: id,
+      titre: titre,
+      autrice: String(l.autrice || site.autrice || "Daniela").trim(),
+      genre: String(l.genre || "").trim() || "Autre",
+      annee: l.annee ? String(l.annee).trim() : "",
+      couverture: chemin(l.couverture),
+      pdf: chemin(l.pdf),
+      resume: resume,
+      _recherche: norm(titre + " " + resume)
+    });
+  });
+  const parId = new Map(livres.map(l => [l.id, l]));
+  if (!livres.length) console.info("[Daniela] Aucun livre dans le tableau LIVRES : ajoutez-en dans la « ZONE À MODIFIER » (voir les commentaires).");
+
+  /* ---------- Couvertures (avec repli clair si le fichier est absent) ---------- */
+  function creerCouverture(l, opts) {
+    const priorite = !!(opts && opts.priorite);
+    const c = creer("div", { class: "couv" });
+    const vide = absente => {
+      c.classList.add("couv--vide");
+      c.textContent = "";
+      c.append(creer("div", { class: "couv__vide", role: "img", "aria-label": "Couverture de « " + l.titre + " » " + (absente ? "introuvable" : "à venir") },
+        icone("livre"),
+        creer("strong", { text: absente ? "Couverture introuvable" : "Couverture à venir" }),
+        absente ? creer("small", { text: safeDecode(l.couverture) }) : null));
+    };
+    if (!l.couverture) { vide(false); return c; }
+    c.append(creer("img", {
+      src: l.couverture, alt: "Couverture de « " + l.titre + " »", width: "400", height: "600",
+      loading: priorite ? "eager" : "lazy", decoding: "async",
+      onerror: () => { console.warn("[Daniela] Couverture introuvable : " + safeDecode(l.couverture)); vide(true); }
+    }));
+    return c;
+  }
+  function safeDecode(p) { try { return decodeURI(p); } catch (e) { return p; } }
+
+  /* ---------- Accueil : pastilles et vitrine ---------- */
+  function rendreAccueil() {
+    const past = $("#pastilles");
+    past.textContent = "";
+    if (livres.length) {
+      const genres = new Set(livres.map(l => norm(l.genre))).size;
+      past.append(
+        creer("li", { class: "pastille" }, creer("strong", { text: String(livres.length) }), " " + (livres.length > 1 ? "livres" : "livre") + " en bibliothèque"),
+        creer("li", { class: "pastille" }, creer("strong", { text: String(genres) }), " " + (genres > 1 ? "genres" : "genre"))
+      );
+    } else {
+      past.append(creer("li", { class: "pastille" }, "Bibliothèque en préparation"));
+    }
+
+    const v = $("#vitrine");
+    v.textContent = "";
+    const sel = livres.slice(0, 3);
+    if (!sel.length) {
+      v.append(
+        creer("div", { class: "vitrine__halo", "aria-hidden": "true" }),
+        creer("div", { class: "embleme" },
+          creer("div", { class: "embleme__rond", "aria-hidden": "true" }, icone("plume")),
+          creer("p", { class: "embleme__legende", text: "Les premiers livres arrivent bientôt." }))
+      );
+      return;
+    }
+    const n = sel.length;
+    const reglages = {
+      1: [{ x: "0%", r: "0deg", s: 1, z: 2 }],
+      2: [{ x: "-30%", r: "-6deg", s: .95, z: 1 }, { x: "30%", r: "6deg", s: .95, z: 2 }],
+      3: [{ x: "-62%", r: "-9deg", s: .86, z: 1 }, { x: "0%", r: "0deg", s: 1, z: 3 }, { x: "62%", r: "9deg", s: .86, z: 1 }]
+    }[n];
+    const pile = creer("div", { class: "pile" });
+    sel.forEach((l, i) => {
+      const g = reglages[i];
+      pile.append(creer("button", {
+        type: "button", class: "pile__livre",
+        style: "--x:" + g.x + ";--r:" + g.r + ";--s:" + g.s + ";--z:" + g.z,
+        "aria-label": "Voir la fiche du livre « " + l.titre + " »",
+        onclick: e => ouvrirFiche(l.id, e.currentTarget)
+      }, creerCouverture(l, { priorite: true })));
+    });
+    v.append(creer("div", { class: "vitrine__halo", "aria-hidden": "true" }), pile);
+  }
+
+  /* ---------- Bibliothèque : cartes, recherche, filtres ---------- */
+  const etat = { requete: "", genre: "" };
+  const grille = $("#grille");
+
+  function creerCarte(l) {
+    const bouton = creer("button", {
+      type: "button", class: "btn btn--verre carte__bouton",
+      "aria-label": "Voir la fiche du livre « " + l.titre + " »",
+      onclick: e => { e.stopPropagation(); ouvrirFiche(l.id, e.currentTarget); }
+    }, icone("lire"), "Voir la fiche");
+    return creer("li", { class: "carte verre", dataset: { id: l.id, genre: norm(l.genre) }, onclick: () => ouvrirFiche(l.id, bouton) },
+      creer("div", { class: "carte__couv" }, creerCouverture(l)),
+      creer("div", { class: "carte__corps" },
+        creer("span", { class: "badge", text: l.genre }),
+        creer("h3", { class: "carte__titre", text: l.titre }),
+        creer("p", { class: "carte__resume" + (l.resume ? "" : " vide"), text: l.resume || "Résumé à venir." })),
+      creer("div", { class: "carte__pied" }, bouton));
+  }
+
+  function rendreFiltres() {
+    const zone = $("#filtres");
+    zone.textContent = "";
+    const groupes = new Map();
+    livres.forEach(l => {
+      const k = norm(l.genre);
+      const e = groupes.get(k) || { label: l.genre, n: 0 };
+      e.n++; groupes.set(k, e);
+    });
+    const ajouter = (cle, label, n) => zone.append(
+      creer("button", { type: "button", class: "puce", "aria-pressed": String(etat.genre === cle), dataset: { genre: cle } },
+        label, creer("span", { class: "puce__n", text: String(n) })));
+    ajouter("", "Tous", livres.length);
+    groupes.forEach((e, k) => ajouter(k, e.label, e.n));
+  }
+
+  function appliquerFiltres() {
+    const mots = norm(etat.requete).split(/\s+/).filter(Boolean);
+    let visibles = 0;
+    $$(".carte", grille).forEach(li => {
+      const l = parId.get(li.dataset.id);
+      const ok = (!etat.genre || li.dataset.genre === etat.genre) && mots.every(m => l._recherche.indexOf(m) !== -1);
+      li.hidden = !ok;
+      if (ok) { li.style.setProperty("--i", Math.min(visibles, 8)); visibles++; }
+    });
+    const total = livres.length;
+    const filtre = etat.genre || mots.length;
+    $("#compte").textContent = !visibles ? "Aucun résultat"
+      : filtre ? pluriel(visibles, "résultat") + " sur " + pluriel(total, "livre")
+      : pluriel(total, "livre") + " dans la bibliothèque";
+    $("#vide-recherche").hidden = !(total && !visibles);
+  }
+
+  function rendreBibliotheque() {
+    $("#vide-biblio").hidden = livres.length > 0;
+    $("#outils").hidden = !livres.length;
+    if (!livres.length) return;
+    livres.forEach(l => grille.append(creerCarte(l)));
+    rendreFiltres();
+    appliquerFiltres();
+
+    const champ = $("#recherche"), effacer = $("#effacer");
+    champ.addEventListener("input", debounce(() => {
+      etat.requete = champ.value;
+      effacer.hidden = !champ.value;
+      appliquerFiltres();
+    }, 120));
+    champ.addEventListener("input", () => { effacer.hidden = !champ.value; });
+    effacer.addEventListener("click", () => { champ.value = ""; etat.requete = ""; effacer.hidden = true; appliquerFiltres(); champ.focus(); });
+    $("#filtres").addEventListener("click", e => {
+      const b = e.target.closest(".puce");
+      if (!b) return;
+      etat.genre = b.dataset.genre;
+      $$(".puce", $("#filtres")).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      appliquerFiltres();
+    });
+    $("#reinit").addEventListener("click", () => {
+      etat.requete = ""; etat.genre = ""; champ.value = ""; effacer.hidden = true;
+      $$(".puce", $("#filtres")).forEach(x => x.setAttribute("aria-pressed", String(x.dataset.genre === "")));
+      appliquerFiltres(); champ.focus();
+    });
+  }
+
+  /* ---------- Dialogues (fiche + lecteur) ---------- */
+  const fiche = $("#fiche"), lecteur = $("#lecteur");
+  let livreCourant = null;
+
+  function majVerrou() {
+    document.documentElement.classList.toggle("verrou", !!document.querySelector("dialog[open]"));
+  }
+  function ouvrirDialogue(d) {
+    try {
+      if (typeof d.showModal === "function") { if (!d.open) d.showModal(); }
+      else d.setAttribute("open", "");
+    } catch (e) { d.setAttribute("open", ""); }
+    majVerrou();
+  }
+  function fermerDialogue(d) {
+    if (typeof d.close === "function") d.close();
+    else { d.removeAttribute("open"); d.dispatchEvent(new Event("close")); }
+    majVerrou();
+  }
+  [fiche, lecteur].forEach(d => {
+    let bas = null;
+    d.addEventListener("pointerdown", e => { bas = e.target; });
+    d.addEventListener("click", e => { if (e.target === d && bas === d) fermerDialogue(d); bas = null; });
+    d.addEventListener("close", majVerrou);
+  });
+  $("#fiche-fermer").addEventListener("click", () => fermerDialogue(fiche));
+  $("#lecteur-fermer").addEventListener("click", () => fermerDialogue(lecteur));
+
+  function majHash(valeur) {
+    try { history.replaceState(null, "", valeur); } catch (e) { /* file:// : sans importance */ }
+  }
+
+  /* Vérification de la présence d'un PDF : « ok », « absent » ou « inconnu »
+     (inconnu = impossible de vérifier, par exemple en ouvrant index.html directement depuis le disque). */
+  const verifs = new Map();
+  function verifierPdf(url) {
+    if (!verifs.has(url)) {
+      verifs.set(url, (async () => {
+        try {
+          const rep = await fetch(url, { method: "HEAD", cache: "no-cache" });
+          if (rep.status === 404 || rep.status === 410) return "absent";
+          if (rep.ok) return (rep.headers.get("content-type") || "").toLowerCase().indexOf("text/html") !== -1 ? "absent" : "ok";
+          return "inconnu";
+        } catch (e) { return "inconnu"; }
+      })());
+    }
+    return verifs.get(url);
+  }
+
+  const nomFichier = l => (l.titre.replace(/[\\/:*?"<>|]+/g, "").trim() || "livre") + ".pdf";
+
+  function reglerLien(a, actif, url, l) {
+    if (actif) {
+      a.setAttribute("href", url);
+      if (a.hasAttribute("download")) a.setAttribute("download", nomFichier(l));
+      a.removeAttribute("aria-disabled"); a.removeAttribute("tabindex");
+    } else {
+      a.removeAttribute("href");
+      a.setAttribute("aria-disabled", "true"); a.setAttribute("tabindex", "-1");
+    }
+  }
+  function definirStatut(type, message, detail) {
+    const s = $("#fiche-statut");
+    s.textContent = "";
+    s.className = "statut" + (type ? " statut--" + type : "");
+    if (!message) { s.hidden = true; return; }
+    s.hidden = false;
+    const ico = type === "ok" ? "valide" : type === "alerte" ? "alerte" : null;
+    if (ico) s.append(icone(ico));
+    s.append(creer("span", {}, message, detail ? creer("small", { text: detail }) : null));
+  }
+
+  function configurerPdf(l) {
+    const ouvrir = $("#btn-ouvrir"), tel = $("#btn-telecharger"), onglet = $("#lien-onglet");
+    const regler = actif => {
+      ouvrir.disabled = !actif;
+      reglerLien(tel, actif, l.pdf, l);
+      reglerLien(onglet, actif, l.pdf, l);
+      onglet.hidden = !actif;
+    };
+    if (!l.pdf) {
+      regler(false);
+      definirStatut("alerte", "Le PDF de ce livre n'est pas encore disponible.");
+      return;
+    }
+    regler(true);
+    definirStatut("", "");
+    verifierPdf(l.pdf).then(r => {
+      if (livreCourant !== l) return;
+      if (r === "absent") {
+        regler(false);
+        definirStatut("alerte", "Le PDF de ce livre est momentanément indisponible.", safeDecode(l.pdf));
+      } else if (r === "ok") {
+        definirStatut("ok", "PDF disponible : lecture en ligne et téléchargement.");
+      }
+    });
+  }
+
+  function ouvrirFiche(id) {
+    const l = parId.get(id);
+    if (!l) return;
+    livreCourant = l;
+    $("#fiche-couv").textContent = "";
+    $("#fiche-couv").append(creerCouverture(l, { priorite: true }));
+    $("#fiche-genre").textContent = l.genre;
+    $("#fiche-titre").textContent = l.titre;
+    $("#fiche-meta").textContent = ["par " + l.autrice, l.annee].filter(Boolean).join(" · ");
+    const r = $("#fiche-resume");
+    r.textContent = l.resume || "Le résumé de ce livre sera ajouté prochainement.";
+    r.classList.toggle("vide", !l.resume);
+    configurerPdf(l);
+    $(".fiche__defile", fiche).scrollTop = 0;
+    ouvrirDialogue(fiche);
+    majHash("#livre-" + encodeURIComponent(l.id));
+  }
+  fiche.addEventListener("close", () => {
+    livreCourant = null;
+    if (/^#livre-/.test(location.hash)) majHash("#bibliotheque");
+  });
+  $("#btn-ouvrir").addEventListener("click", () => { if (livreCourant && livreCourant.pdf) ouvrirLecteur(livreCourant); });
+  $("#btn-telecharger").addEventListener("click", e => { if (e.currentTarget.getAttribute("aria-disabled") === "true") e.preventDefault(); });
+  $("#lien-onglet").addEventListener("click", e => { if (e.currentTarget.getAttribute("aria-disabled") === "true") e.preventDefault(); });
+
+  /* ---------- Lecteur PDF intégré, avec solutions de repli ---------- */
+  let minuteur = null;
+  function viderLecteur() {
+    clearTimeout(minuteur);
+    const c = $("#lecteur-corps");
+    const f = $("iframe", c);
+    if (f) f.src = "about:blank";
+    c.textContent = "";
+  }
+  function integrerPdf(l) {
+    viderLecteur();
+    const c = $("#lecteur-corps");
+    const f = creer("iframe", { title: "Lecture du PDF : " + l.titre, src: l.pdf + "#view=FitH" });
+    const pret = () => { clearTimeout(minuteur); f.classList.add("pret"); };
+    f.addEventListener("load", pret);
+    minuteur = setTimeout(pret, 4000);
+    c.append(creer("div", { class: "lecteur__chargement", role: "status", text: "Chargement du PDF…" }), f);
+  }
+  function afficherSecours(type, l) {
+    viderLecteur();
+    const c = $("#lecteur-corps");
+    const sansPdf = type === "absent";
+    const boutons = sansPdf ? [] : [
+      creer("a", { class: "btn btn--or", href: l.pdf, target: "_blank", rel: "noopener" }, icone("externe"), "Ouvrir dans un nouvel onglet"),
+      creer("a", { class: "btn btn--verre", href: l.pdf, download: nomFichier(l) }, icone("telecharger"), "Télécharger le PDF"),
+      creer("button", { class: "btn btn--verre", type: "button", onclick: () => integrerPdf(l) }, "Essayer l'affichage intégré")
+    ];
+    c.append(creer("div", { class: "lecteur__secours" },
+      icone(sansPdf ? "alerte" : "lire"),
+      creer("h3", { text: sansPdf ? "PDF non disponible" : "Lecture intégrée non prise en charge" }),
+      creer("p", { text: sansPdf
+        ? "Le fichier PDF de ce livre n'est pas disponible pour le moment."
+        : "Votre navigateur n'affiche pas les PDF directement dans la page. Ouvrez le livre dans un nouvel onglet ou téléchargez-le." }),
+      creer("div", { class: "actions", style: "justify-content:center" }, boutons)));
+  }
+  function ouvrirLecteur(l) {
+    $("#lecteur-titre").textContent = l.titre;
+    const tel = $("#lecteur-telecharger"), onglet = $("#lecteur-onglet");
+    reglerLien(tel, !!l.pdf, l.pdf, l);
+    reglerLien(onglet, !!l.pdf, l.pdf, l);
+    if (!l.pdf) afficherSecours("absent", l);
+    else if (navigator.pdfViewerEnabled === false) afficherSecours("integre", l);
+    else integrerPdf(l);
+    ouvrirDialogue(lecteur);
+  }
+  lecteur.addEventListener("close", viderLecteur);
+
+  /* ---------- Menu mobile ---------- */
+  const burger = $("#burger"), nav = $("#nav");
+  function basculerMenu(ouvert) {
+    burger.setAttribute("aria-expanded", String(ouvert));
+    burger.setAttribute("aria-label", ouvert ? "Fermer le menu" : "Ouvrir le menu");
+    nav.classList.toggle("ouvert", ouvert);
+  }
+  burger.addEventListener("click", () => basculerMenu(burger.getAttribute("aria-expanded") !== "true"));
+  nav.addEventListener("click", e => { if (e.target.closest("a")) basculerMenu(false); });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && burger.getAttribute("aria-expanded") === "true") { basculerMenu(false); burger.focus(); }
+  });
+  document.addEventListener("click", e => {
+    if (burger.getAttribute("aria-expanded") === "true" && !nav.contains(e.target) && !burger.contains(e.target)) basculerMenu(false);
+  });
+  if (window.matchMedia) {
+    const mq = window.matchMedia("(min-width: 861px)");
+    const quand = () => { if (mq.matches) basculerMenu(false); };
+    if (mq.addEventListener) mq.addEventListener("change", quand); else if (mq.addListener) mq.addListener(quand);
+  }
+
+  /* ---------- Navigation : section active + apparition au défilement ---------- */
+  const liensNav = $$(".nav a[data-section]");
+  const marquer = id => liensNav.forEach(a => a.dataset.section === id ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current"));
+  if ("IntersectionObserver" in window) {
+    const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) marquer(e.target.id); }), { rootMargin: "-40% 0px -55% 0px" });
+    ["accueil", "bibliotheque", "apropos"].forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
+    const rev = new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); o.unobserve(e.target); } }), { threshold: .08 });
+    $$(".reveal").forEach(el => rev.observe(el));
+  } else {
+    $$(".reveal").forEach(el => el.classList.add("visible"));
+  }
+
+  /* ---------- À propos : portrait, textes et onglets ---------- */
+  function rendreApropos() {
+    const p = $("#portrait");
+    const lettre = () => { p.textContent = ""; p.append(creer("span", { class: "portrait__lettre", "aria-hidden": "true", text: (site.autrice || "D").charAt(0).toUpperCase() })); };
+    const photo = chemin(site.photo);
+    if (photo) {
+      p.append(creer("img", { src: photo, alt: "Portrait de " + site.autrice, loading: "lazy", decoding: "async", onerror: lettre }));
+    } else lettre();
+
+    const pres = $("#panneau-presentation");
+    (Array.isArray(site.presentation) ? site.presentation : []).forEach(t => { if (String(t).trim()) pres.append(creer("p", { text: String(t) })); });
+    if (!pres.children.length) pres.append(creer("p", { class: "discret", text: "La présentation de Daniella sera ajoutée prochainement." }));
+
+    const pc = $("#panneau-contact");
+    const email = String(site.contact.email || "").trim();
+    const liens = (Array.isArray(site.contact.liens) ? site.contact.liens : []).filter(x => x && /^https?:\/\//i.test(String(x.url || "")) && String(x.nom || "").trim());
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) pc.append(creer("p", {}, "Écrire à Daniella : ", creer("a", { href: "mailto:" + email, text: email })));
+    if (liens.length) pc.append(creer("ul", {}, liens.map(x => creer("li", {}, creer("a", { href: x.url, target: "_blank", rel: "noopener noreferrer", text: x.nom })))));
+    if (!pc.children.length) pc.append(creer("p", { class: "discret", text: "Les coordonnées de Daniela seront ajoutées prochainement." }));
+
+    const tabs = $$('[role="tab"]');
+    const activer = (tab, focus) => {
+      tabs.forEach(t => {
+        const sel = t === tab;
+        t.setAttribute("aria-selected", String(sel));
+        t.tabIndex = sel ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !sel;
+      });
+      if (focus) tab.focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => activer(t, false));
+      t.addEventListener("keydown", e => {
+        const k = e.key;
+        if (k !== "ArrowRight" && k !== "ArrowLeft" && k !== "Home" && k !== "End") return;
+        e.preventDefault();
+        const cible = k === "Home" ? 0 : k === "End" ? tabs.length - 1 : (i + (k === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+        activer(tabs[cible], true);
+      });
+    });
+  }
+
+  /* ---------- Lien direct vers une fiche (#livre-identifiant) ---------- */
+  function ouvrirDepuisHash() {
+    const m = location.hash.match(/^#livre-(.+)$/);
+    if (!m) return;
+    let id; try { id = decodeURIComponent(m[1]); } catch (e) { return; }
+    if (parId.has(id) && (!livreCourant || livreCourant.id !== id)) ouvrirFiche(id);
+  }
+  window.addEventListener("hashchange", ouvrirDepuisHash);
+
+  /* ---------- Démarrage ---------- */
+  $("#annee").textContent = String(new Date().getFullYear());
+  rendreAccueil();
+  rendreBibliotheque();
+  rendreApropos();
+  ouvrirDepuisHash();
+})();
+</script>
+</body>
+</html>
