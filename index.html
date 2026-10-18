@@ -7,15 +7,35 @@
 <meta name="description" content="Daniella — Univers littéraire : l'application où Daniella publie ses livres. Lisez les résumés, aimez vos livres préférés et lisez les PDF directement.">
 <meta name="theme-color" content="#0a0414">
 <meta name="color-scheme" content="dark">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231b0d3a'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23efc25f' font-family='Georgia,serif' font-weight='700'%3ED%3C/text%3E%3C/svg%3E">
+ <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231b0d3a'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23efc25f' font-family='Georgia,serif' font-weight='700'%3ED%3C/text%3E%3C/svg%3E">
+<!-- Lien vers le manifeste PWA -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Couleurs et icônes pour les appareils mobiles -->
+<meta name="theme-color" content="#4f46e5">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">   
 <script>document.documentElement.classList.add("js");</script>
+
+     <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((registration) => {
+          console.log('Service Worker enregistré avec succès, scope :', registration.scope);
+        })
+        .catch((error) => {
+          console.log('Échec de l\'enregistrement du Service Worker :', error);
+        });
+    });
+  }
+</script>
 
 <!-- Polices (facultatif) : supprimez ces 3 lignes pour un site sans appel externe,
      des polices de secours élégantes (Georgia / police système) seront alors utilisées. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap">
-
 <style>
 /* =========================================================
    1. VARIABLES — violet profond & or lumineux
