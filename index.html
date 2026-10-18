@@ -197,7 +197,7 @@ ul{ margin:0; padding:0; list-style:none; }
   body{ padding-bottom:calc(96px + env(safe-area-inset-bottom)); }
   .onglets-nav{ position:fixed; left:0; right:0; bottom:0; z-index:70; padding:0 .6rem calc(.6rem + env(safe-area-inset-bottom)); }
   .onglets{
-    display:grid; grid-template-columns:repeat(5,1fr); gap:.15rem; padding:.35rem; border-radius:24px;
+    display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.15rem; padding:.35rem; border-radius:24px;
     background:rgba(20,9,44,.88); border:1px solid rgba(239,194,95,.32);
     box-shadow:0 -10px 40px -10px rgba(0,0,0,.7), 0 0 40px -16px rgba(239,194,95,.3);
     -webkit-backdrop-filter:blur(18px) saturate(150%); backdrop-filter:blur(18px) saturate(150%);
@@ -208,7 +208,8 @@ ul{ margin:0; padding:0; list-style:none; }
   .tab__n{ position:absolute; top:.1rem; right:calc(50% - 1.6rem); min-width:1.15rem; height:1.15rem; font-size:.64rem; }
   .tab[aria-selected="true"] .tab__n{ background:var(--gold-400); color:#2a1604; }
 }
-@media (max-width:380px){ .tab{ font-size:.62rem; } .tab .ico{ width:1.3rem; height:1.3rem; } }
+@media (max-width:420px){ .tab{ font-size:.64rem; } .tab .ico{ width:1.35rem; height:1.35rem; } }
+@media (max-width:350px){ .tab{ font-size:.58rem; } }
 
 /* =========================================================
    7. TITRES, PAGES ET SECTIONS
@@ -457,7 +458,8 @@ dialog::backdrop{ background:rgba(6,2,16,.74); -webkit-backdrop-filter:blur(6px)
 .lecteur iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent; opacity:0; transition:opacity .4s; }
 .lecteur iframe.pret{ opacity:1; }
 .lecteur__secours{ position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:1rem; padding:1.5rem; text-align:center; overflow:auto; }
-.lecteur__secours .ico{ width:2.6rem; height:2.6rem; color:var(--gold-300); }
+.lecteur__secours > .ico{ width:2.6rem; height:2.6rem; color:var(--gold-300); }
+.lecteur__secours .actions{ margin-top:.8rem; }
 .lecteur__secours h3{ font:600 1.8rem/1.15 var(--font-title); }
 .lecteur__secours p{ max-width:32rem; color:var(--text-2); }
 .lecteur__aide{ padding:.6rem 1.4rem .75rem; font-size:.86rem; color:var(--muted); border-top:1px solid rgba(255,255,255,.1); }
@@ -1324,9 +1326,8 @@ const LIVRES_PUBLICS = [
       const nl = Array.from(etat.likes).filter(id => ids.has(id)).length;
       past.append(
         creer("li", { class: "pastille" }, creer("strong", { text: String(liste.length) }), " " + (liste.length > 1 ? "livres" : "livre")),
-        creer("li", { class: "pastille" }, creer("strong", { text: String(genres) }), " " + (genres > 1 ? "genres" : "genre")),
-        nl ? creer("li", { class: "pastille" }, creer("strong", { text: String(nl) }), " " + (nl > 1 ? "livres aimés" : "livre aimé")) : null
-      );
+        creer("li", { class: "pastille" }, creer("strong", { text: String(genres) }), " " + (genres > 1 ? "genres" : "genre")));
+      if (nl) past.append(creer("li", { class: "pastille" }, creer("strong", { text: String(nl) }), " " + (nl > 1 ? "livres aimés" : "livre aimé")));
     } else past.append(creer("li", { class: "pastille" }, "Bibliothèque en préparation"));
   }
   function rendreAccueil() {
@@ -1703,7 +1704,9 @@ const LIVRES_PUBLICS = [
       const saisie = champ.value.replace(/\s+/g, "");
       err.textContent = /^@?dani[eé]la$/i.test(saisie)
         ? "Identifiant incorrect. Attention : Daniella s'écrit avec deux L."
-        : "Identifiant incorrect. Vérifiez l'orthographe et réessayez.";
+        : /^daniella$/i.test(saisie)
+          ? "Identifiant incomplet. N'oubliez pas le @ au début : @Daniella."
+          : "Identifiant incorrect. Vérifiez l'orthographe et réessayez.";
       err.hidden = false;
       champ.classList.remove("secoue"); void champ.offsetWidth; champ.classList.add("secoue");
       champ.focus();
@@ -1987,4 +1990,4 @@ const LIVRES_PUBLICS = [
 </body>
 </html>
 
-  
+ 
