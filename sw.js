@@ -1,9 +1,9 @@
-const CACHE_NAME = 'daniella-cache-v1';
+const CACHE_NAME = 'daniella-cache-v2';
 const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  './logo.png'
+  './logooo.png'
 ];
 
 // Installation du Service Worker et mise en cache des fichiers de base
